@@ -1,6 +1,7 @@
 import React from 'react';
 import CsvImporter from './CsvImporter.jsx';
 import ImportHistory from './ImportHistory.jsx';
+import TopProgressions from './TopProgressions.jsx';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -41,6 +42,8 @@ export default function Dashboard() {
       <div className="dashboard-importer">
         <CsvImporter />
       </div>
+
+      <TopProgressions />
 
       <ImportHistory />
     </div>

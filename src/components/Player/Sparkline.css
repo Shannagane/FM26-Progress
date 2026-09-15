@@ -1,0 +1,9 @@
+.sparkline {
+  display: block;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.sparkline-positive { color: var(--green); }
+.sparkline-negative { color: var(--red); }

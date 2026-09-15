@@ -60,3 +60,10 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
+.attribute-value-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}

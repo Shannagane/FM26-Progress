@@ -3,6 +3,7 @@ import './PlayerTabs.css';
 
 const TABS = [
   { key: 'attributs', label: 'Attributs' },
+  { key: 'diagramme', label: 'Diagramme' },
   { key: 'historique', label: 'Historique' },
   { key: 'personnalite', label: 'Personnalité' },
   { key: 'stats', label: 'Stats' }

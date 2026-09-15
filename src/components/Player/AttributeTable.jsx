@@ -1,8 +1,9 @@
 import React from 'react';
 import { attributeColorClass } from '../../data/attributesConfig.js';
 import { attributeTierClass } from '../../data/attributeHighlights.js';
-import { getAttributeDelta } from '../../utils/storage.js';
+import { getAttributeDelta, getAttributeHistory } from '../../utils/storage.js';
 import DeltaBadge from './DeltaBadge.jsx';
+import Sparkline from './Sparkline.jsx';
 import './AttributeTable.css';
 
 export default function AttributeTable({ title, attrs, player, snapshots, selectedKey, onSelect }) {
@@ -14,6 +15,7 @@ export default function AttributeTable({ title, attrs, player, snapshots, select
           {attrs.map(attrDef => {
             const value = player.attributes?.[attrDef.key];
             const delta = getAttributeDelta(snapshots, player.id, attrDef.key);
+            const history = getAttributeHistory(snapshots, player.id, attrDef.key);
             const isSelected = selectedKey === attrDef.key;
             const tierClass = attributeTierClass(player.poste, attrDef.key);
             return (
@@ -26,8 +28,11 @@ export default function AttributeTable({ title, attrs, player, snapshots, select
               >
                 <td className="attribute-name">{attrDef.label}</td>
                 <td className={`attribute-value ${attributeColorClass(value)}`}>
-                  {value ?? '–'}
-                  <DeltaBadge delta={delta} />
+                  <span className="attribute-value-inner">
+                    <Sparkline history={history} />
+                    <span>{value ?? '–'}</span>
+                    <DeltaBadge delta={delta} />
+                  </span>
                 </td>
               </tr>
             );

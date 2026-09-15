@@ -26,3 +26,25 @@ export function getAttributeDeltas(snapshots, playerId) {
   const total = deltas.reduce((sum, d) => sum + d.delta, 0);
   return { deltas, total, importCount: history.length };
 }
+
+// Courbe de progression globale d'un joueur : à chaque import, la somme des écarts de
+// tous ses attributs par rapport à son tout premier import (0 au premier point). Sert de
+// courbe par défaut sur la fiche joueur, avant qu'un attribut précis ne soit sélectionné.
+export function getGlobalProgressHistory(snapshots, playerId) {
+  const history = getPlayerSnapshots(snapshots, playerId);
+  if (history.length < 2) return [];
+
+  const firstAttrs = history[0].player.attributes || {};
+
+  return history.map(entry => {
+    let total = 0;
+    Object.keys(ATTR_BY_KEY).forEach(key => {
+      const a = entry.player.attributes?.[key];
+      const b = firstAttrs[key];
+      if (a === undefined || a === null || b === undefined || b === null) return;
+      const diff = Number(a) - Number(b);
+      if (!Number.isNaN(diff)) total += diff;
+    });
+    return { gameDate: entry.gameDate, csvName: entry.csvName, value: total };
+  });
+}

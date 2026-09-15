@@ -1,0 +1,111 @@
+.top-progressions-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px 28px;
+  margin-bottom: 22px;
+}
+
+@media (min-width: 900px) {
+  .top-progressions-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.top-progressions {
+  margin-bottom: 0;
+}
+
+.top-progressions-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.top-progressions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.top-progressions-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 16px 18px;
+}
+
+.top-progressions-club {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--blue-400);
+  margin-bottom: 10px;
+}
+
+.top-progressions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.top-progressions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px;
+  border-radius: var(--radius-s);
+  color: inherit;
+}
+.top-progressions-row:hover {
+  background: var(--surface-hover);
+}
+
+.top-progressions-rank {
+  flex-shrink: 0;
+  width: 22px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.top-progressions-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-progressions-poste {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.top-progressions-value {
+  flex-shrink: 0;
+  min-width: 34px;
+  text-align: right;
+  font-size: 13.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.top-progressions-value-positive { color: var(--green); }
+.top-progressions-value-negative { color: var(--red); }
+.top-progressions-value-neutral { color: var(--text-secondary); }
+
+@media (max-width: 420px) {
+  .top-progressions-grid { grid-template-columns: 1fr; }
+}

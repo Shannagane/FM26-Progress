@@ -6,6 +6,7 @@ import NationFlag from './NationFlag.jsx';
 import PlayerInfo from './PlayerInfo.jsx';
 import PlayerTabs from './PlayerTabs.jsx';
 import AttributesTab from './AttributesTab.jsx';
+import AttributeRadar from './AttributeRadar.jsx';
 import PersonalityTab from './PersonalityTab.jsx';
 import HistoryTab from './HistoryTab.jsx';
 import StatsTab from './StatsTab.jsx';
@@ -52,6 +53,7 @@ export default function PlayerPage() {
       <PlayerTabs active={tab} onChange={setTab} />
 
       {tab === 'attributs' && <AttributesTab player={player} snapshots={snapshots} />}
+      {tab === 'diagramme' && <AttributeRadar player={player} />}
       {tab === 'historique' && <HistoryTab player={player} snapshots={snapshots} />}
       {tab === 'personnalite' && <PersonalityTab player={player} snapshots={snapshots} />}
       {tab === 'stats' && <StatsTab player={player} snapshots={snapshots} />}
