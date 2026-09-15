@@ -1,0 +1,69 @@
+.player-page {
+  width: 100%;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.back-link:hover { color: var(--blue-400); }
+
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.player-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.player-header-name {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.player-header-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.position-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--blue-100);
+  color: var(--blue-600);
+}
+
+.value-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--green) 18%, transparent);
+  color: var(--green);
+}
+
+[data-theme='dark'] .position-badge {
+  background: color-mix(in srgb, var(--blue-400) 20%, transparent);
+  color: var(--blue-400);
+}
+
+.position-gk {
+  background: color-mix(in srgb, var(--orange) 20%, transparent);
+  color: var(--orange);
+}

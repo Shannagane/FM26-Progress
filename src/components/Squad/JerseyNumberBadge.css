@@ -1,0 +1,17 @@
+.jersey-badge {
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.jersey-badge-green { background: #16A34A; }
+.jersey-badge-blue { background: var(--blue-600); }
+.jersey-badge-orange { background: #D97706; }
+.jersey-badge-teal { background: #0D9488; }
+.jersey-badge-red { background: var(--red); }
+.jersey-badge-neutral { background: var(--grey-mid); }

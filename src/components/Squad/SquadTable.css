@@ -1,0 +1,53 @@
+.squad-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.squad-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+  table-layout: fixed;
+}
+
+.squad-table thead th {
+  text-align: left;
+  font-size: 12px;
+  text-transform: none;
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  position: sticky;
+  top: 0;
+  white-space: normal;
+  line-height: 1.3;
+}
+
+.squad-table thead th.th-numeric {
+  text-align: center;
+}
+
+@media (min-width: 2000px) {
+  .squad-table thead th,
+  .squad-table-wrap .player-row td {
+    padding: 16px 22px;
+    font-size: 15px;
+  }
+}
+
+/* Mobile : tableau compact avec scroll horizontal, en-têtes toujours visibles */
+@media (max-width: 600px) {
+  .squad-table {
+    min-width: 560px;
+  }
+  .squad-table thead th,
+  .squad-table-wrap .player-row td {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+}

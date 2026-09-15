@@ -1,0 +1,129 @@
+:root {
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --blue-600: #1D4ED8;
+  --blue-500: #2E5BE8;
+  --blue-400: #3B82F6;
+  --blue-100: #DCE7FF;
+
+  --green: #22C55E;
+  --orange: #F59E0B;
+  --red: #EF4444;
+  --violet: #8e0cda;
+  --grey-mid: #9AA3B2;
+
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 16px;
+
+  --sidebar-width: 232px;
+}
+
+[data-theme='dark'] {
+  --bg: #181819;
+  --bg-elevated: #1E1E1F;
+  --surface: #181818;
+  --surface-hover: #232324;
+  --border: #2A2A2B;
+  --text-primary: #F2F5FA;
+  --text-secondary: #8C96AC;
+  --text-muted: #5C6680;
+  --sidebar-bg: #101011;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --attr-white: #E7EBF3;
+  --attr-empty: #3A4258;
+}
+
+[data-theme='light'] {
+  --bg: #F5F7FB;
+  --bg-elevated: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-hover: #EEF2FA;
+  --border: #E1E6F0;
+  --text-primary: #10131C;
+  --text-secondary: #565F73;
+  --text-muted: #99A1B3;
+  --sidebar-bg: #0A0E1A;
+  --shadow: 0 8px 24px rgba(20, 30, 60, 0.08);
+  --attr-white: #33384A;
+  --attr-empty: #C7CCDA;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--blue-400);
+  color: white;
+}
+
+/* Scrollbars discrètes */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Focus clavier visible pour l'accessibilité */
+:focus-visible {
+  outline: 2px solid var(--blue-400);
+  outline-offset: 2px;
+}
+
+/* Classes de couleur d'attribut, réutilisées dans plusieurs composants */
+.attr-green { color: var(--green); font-weight: 600; }
+.attr-orange { color: var(--orange); font-weight: 600; }
+.attr-white { color: var(--attr-white); font-weight: 500; }
+.attr-grey { color: var(--grey-mid); font-weight: 500; }
+.attr-empty { color: var(--text-muted); }
+
+.delta-up { color: var(--green); font-weight: 600; }
+.delta-down { color: var(--red); font-weight: 600; }
+
+.foot-weak { color: var(--red); font-weight: 600; }
+.foot-strong { color: var(--green); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

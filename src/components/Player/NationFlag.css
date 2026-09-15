@@ -1,0 +1,6 @@
+.nation-flag {
+  font-size: 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--border);
+  flex-shrink: 0;
+}

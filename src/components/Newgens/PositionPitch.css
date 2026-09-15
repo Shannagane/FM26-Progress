@@ -1,0 +1,72 @@
+.position-pitch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.pitch-svg {
+  width: 100%;
+  max-width: 340px;
+}
+
+.pitch-field {
+  fill: #1B7A3D;
+  stroke: none;
+}
+[data-theme='light'] .pitch-field { fill: #2E9E52; }
+
+.pitch-line {
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 0.5;
+}
+
+.pitch-spot {
+  fill: rgba(255, 255, 255, 0.55);
+}
+
+.pitch-dot {
+  stroke: #0B1F14;
+  stroke-width: 0.8;
+}
+
+.pitch-dot-rank-1 { fill: var(--green); }
+.pitch-dot-rank-2 { fill: #86EFAC; }
+.pitch-dot-rank-3 { fill: var(--orange); }
+
+.pitch-dot-interior {
+  opacity: 0.6;
+  stroke-dasharray: 1.6 1.2;
+}
+
+.pitch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.pitch-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.pitch-legend-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pitch-legend-dot-rank-1 { background: var(--green); }
+.pitch-legend-dot-rank-2 { background: #86EFAC; }
+.pitch-legend-dot-rank-3 { background: var(--orange); }
+
+.pitch-legend-dot-interior {
+  background: transparent;
+  border: 1.5px dashed var(--text-secondary);
+}

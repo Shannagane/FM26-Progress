@@ -1,0 +1,123 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppData } from '../../context/AppContext.jsx';
+import { NEWGENS_METHODS } from '../../data/newgensPositionProfiles.js';
+import './NewgensPage.css';
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return iso;
+  }
+}
+
+export default function NewgensPage() {
+  const { snapshots, newgensSnapshots } = useAppData();
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImportId, setSelectedImportId] = useState('');
+  const [method, setMethod] = useState('polynomial');
+
+  const importsOrdered = useMemo(() => {
+    const combined = [
+      ...snapshots.map(snap => ({ ...snap, type: 'effectif' })),
+      ...newgensSnapshots.map(snap => ({ ...snap, type: 'newgens' }))
+    ];
+    return combined.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
+  }, [snapshots, newgensSnapshots]);
+
+  const hasImports = importsOrdered.length > 0;
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    function onKeyDown(e) { if (e.key === 'Escape') setModalOpen(false); }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [modalOpen]);
+
+  function openModal() {
+    setSelectedImportId('');
+    setModalOpen(true);
+  }
+
+  function handleConfirm() {
+    if (!selectedImportId) return;
+    navigate(`/newgens/${selectedImportId}?method=${method}`);
+    setModalOpen(false);
+  }
+
+  return (
+    <div className="newgens-page">
+      <p className="newgens-intro">
+        Le Labo des Postes analyse automatiquement les attributs de tes joueurs importés
+        (effectif complet ou newgens) pour t'indiquer leur poste idéal.
+      </p>
+
+      <button type="button" className="newgens-open-modal-btn" onClick={openModal}>
+        Choisir une méthode et un effectif
+      </button>
+
+      {modalOpen && (
+        <div
+          className="newgens-modal-overlay"
+          onMouseDown={e => { if (e.target === e.currentTarget) setModalOpen(false); }}
+        >
+          <div className="newgens-modal" role="dialog" aria-modal="true" aria-label="Choisir une méthode et un effectif">
+            <div className="newgens-modal-header">
+              <h3>Choisir une méthode et un effectif</h3>
+              <button type="button" className="newgens-modal-close" onClick={() => setModalOpen(false)} aria-label="Fermer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+
+            <label className="newgens-method-select">
+              <span>Méthode de calcul</span>
+              <select value={method} onChange={e => setMethod(e.target.value)}>
+                {NEWGENS_METHODS.map(m => (
+                  <option key={m.key} value={m.key}>{m.label}</option>
+                ))}
+              </select>
+            </label>
+
+            {hasImports ? (
+              <label className="newgens-import-select">
+                <span>Effectif / Import</span>
+                <select value={selectedImportId} onChange={e => setSelectedImportId(e.target.value)}>
+                  <option value="">Sélectionner un import…</option>
+                  {importsOrdered.map(snap => (
+                    <option key={snap.id} value={snap.id}>
+                      {snap.csvName || 'Import'} — {formatDate(snap.gameDate)} · {snap.type === 'newgens' ? 'Newgens' : 'Effectif'} ({Object.keys(snap.players).length} joueur(s))
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : (
+              <p className="newgens-explain-hint">
+                Aucun import pour le moment. Rends-toi sur le{' '}
+                <Link to="/" onClick={() => setModalOpen(false)}>tableau de bord</Link> pour importer ton
+                effectif ou tes newgens.
+              </p>
+            )}
+
+            <div className="newgens-modal-actions">
+              <button type="button" className="newgens-modal-secondary" onClick={() => setModalOpen(false)}>
+                Annuler
+              </button>
+              <button
+                type="button"
+                className="newgens-modal-confirm"
+                onClick={handleConfirm}
+                disabled={!selectedImportId}
+              >
+                Voir les résultats
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

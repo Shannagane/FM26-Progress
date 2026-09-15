@@ -1,0 +1,194 @@
+.newgens-player-page {
+  width: 100%;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.back-link:hover { color: var(--blue-400); }
+
+.newgens-player-header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.newgens-player-no-data {
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 18px 20px;
+}
+
+.newgens-analysis-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.newgens-analysis-layout .position-pitch {
+  flex: 0 0 300px;
+  margin-bottom: 0;
+}
+
+.newgens-top-positions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .newgens-analysis-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .newgens-analysis-layout .position-pitch {
+    flex-basis: auto;
+  }
+}
+
+.newgens-top-position-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.newgens-top-position {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-m);
+  padding: 14px 18px;
+  font-weight: 700;
+}
+
+.newgens-top-position-block:first-child .newgens-top-position {
+  padding: 18px 20px;
+  font-size: 16px;
+}
+
+.newgens-top-position-rank {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.6;
+}
+
+.newgens-top-position-label {
+  flex: 1;
+}
+
+.newgens-top-position-short {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+}
+
+.newgens-top-position-score {
+  font-size: 20px;
+}
+
+.newgens-top-position-block:first-child .newgens-top-position-score {
+  font-size: 24px;
+}
+
+.newgens-foot-check {
+  padding: 0 4px;
+}
+
+.newgens-foot-check-double {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.newgens-foot-check-variant {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.newgens-foot-check-variant-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.newgens-foot-boxes {
+  display: flex;
+  gap: 10px;
+}
+
+.newgens-foot-box {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.newgens-foot-box-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #FFFFFF;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.newgens-foot-box-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.newgens-foot-box-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.newgens-foot-box-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.newgens-foot-box-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.newgens-foot-box-pure .newgens-foot-box-icon { background: var(--blue-600); }
+.newgens-foot-box-priority .newgens-foot-box-icon { background: var(--blue-400); }
+.newgens-foot-box-comfortable .newgens-foot-box-icon { background: var(--grey-mid); }
+.newgens-foot-box-ambidextre .newgens-foot-box-icon { background: var(--violet); }
+
+.newgens-top-position {
+  background: color-mix(in srgb, var(--position-accent, var(--blue-400)) 16%, transparent);
+  color: var(--position-accent, var(--blue-400));
+}

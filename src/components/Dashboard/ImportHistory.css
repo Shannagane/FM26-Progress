@@ -1,0 +1,182 @@
+.import-history {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 20px 22px;
+}
+
+.import-history-empty {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.import-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.import-history-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.import-history-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.import-club-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.import-club-select select {
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  max-width: 180px;
+}
+.import-club-select select:focus { border-color: var(--blue-400); }
+
+.import-history-empty-filter {
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  margin-bottom: 12px;
+}
+
+.reset-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-s);
+}
+.reset-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.import-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.import-history-list li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: var(--radius-s);
+  background: var(--bg-elevated);
+  font-size: 13.5px;
+}
+
+.import-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 160px;
+}
+
+.import-type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.import-type-badge-effectif {
+  background: color-mix(in srgb, var(--blue-400) 16%, transparent);
+  color: var(--blue-400);
+}
+
+.import-type-badge-newgens {
+  background: color-mix(in srgb, var(--violet) 18%, transparent);
+  color: var(--violet);
+}
+
+.import-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.import-meta-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.import-count {
+  margin-left: auto;
+  color: var(--blue-400);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.import-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  background: none;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.import-delete-btn svg {
+  width: 15px;
+  height: 15px;
+}
+.import-delete-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+@media (max-width: 560px) {
+  .import-history { padding: 16px; }
+  .import-history-header-actions { width: 100%; }
+  .import-club-select { flex: 1; }
+  .import-club-select select { max-width: none; flex: 1; }
+  .import-history-list li {
+    gap: 8px 18px;
+  }
+  .import-count {
+    margin-left: 0;
+  }
+  .import-delete-btn {
+    margin-left: auto;
+  }
+}

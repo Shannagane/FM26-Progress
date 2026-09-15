@@ -1,0 +1,21 @@
+.progress-chart {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 18px 18px 6px;
+  margin-bottom: 20px;
+}
+
+.progress-chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.progress-chart-empty {
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  padding: 30px 20px;
+  text-align: center;
+}

@@ -1,0 +1,62 @@
+.attribute-table {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 14px 4px 8px;
+  width: 100%;
+}
+
+.attribute-table-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 0 14px 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.attribute-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attribute-row {
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.attribute-row:hover,
+.attribute-row:focus-visible {
+  background: var(--surface-hover);
+}
+
+/* Surlignage des attributs clés selon le poste (palier S/A/B/C/D) */
+.attribute-tier-S { background: color-mix(in srgb, var(--red) 20%, transparent); }
+.attribute-tier-A { background: color-mix(in srgb, var(--orange) 20%, transparent); }
+.attribute-tier-B { background: color-mix(in srgb, var(--violet) 22%, transparent); }
+.attribute-tier-C { background: color-mix(in srgb, var(--green) 18%, transparent); }
+.attribute-tier-D { background: color-mix(in srgb, var(--blue-400) 18%, transparent); }
+
+.attribute-row-selected {
+  background: color-mix(in srgb, var(--blue-400) 14%, transparent);
+}
+
+.attribute-row-static {
+  cursor: default;
+}
+.attribute-row-static:hover {
+  background: none;
+}
+
+.attribute-name {
+  padding: 7px 14px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+
+.attribute-value {
+  padding: 7px 14px;
+  text-align: right;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

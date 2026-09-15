@@ -1,0 +1,66 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-title {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-s);
+}
+.menu-btn svg { width: 22px; height: 22px; }
+.menu-btn:hover { background: var(--surface-hover); }
+
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.theme-toggle svg { width: 19px; height: 19px; }
+.theme-toggle:hover { background: var(--surface-hover); transform: translateY(-1px); }
+
+@media (max-width: 880px) {
+  .menu-btn { display: inline-flex; }
+  .topbar { padding: 14px 16px; }
+  .topbar-title { font-size: 18px; }
+}
+
+@media (min-width: 2400px) {
+  .topbar { padding: 22px 40px; }
+  .topbar-title { font-size: 25px; }
+  .theme-toggle { width: 44px; height: 44px; }
+  .theme-toggle svg { width: 22px; height: 22px; }
+}

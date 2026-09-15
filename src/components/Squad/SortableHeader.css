@@ -1,0 +1,39 @@
+.sortable-th {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s ease;
+}
+
+.sortable-th:hover {
+  color: var(--text-primary);
+}
+
+.sortable-th-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sortable-th.th-numeric .sortable-th-inner {
+  justify-content: center;
+}
+
+.sort-arrow {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transform: rotate(180deg);
+  transition: opacity 0.12s ease, transform 0.15s ease;
+}
+
+.sort-arrow-visible {
+  opacity: 1;
+}
+
+.sort-arrow-desc {
+  transform: rotate(0deg);
+}
+
+.sortable-th-active {
+  color: var(--blue-500);
+}

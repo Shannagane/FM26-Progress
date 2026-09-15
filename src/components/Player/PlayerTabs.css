@@ -1,0 +1,27 @@
+.player-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin: 22px 0 20px;
+}
+
+.player-tab {
+  background: none;
+  border: none;
+  padding: 10px 4px;
+  margin-right: 22px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  transform: translateY(1px);
+}
+
+.player-tab:hover {
+  color: var(--text-primary);
+}
+
+.player-tab-active {
+  color: var(--blue-500);
+  border-bottom-color: var(--blue-500);
+}
