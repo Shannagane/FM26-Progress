@@ -31,10 +31,10 @@ export default function Dashboard() {
                 <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
               </svg>
             </span>
-            <h3>Importez vos Newgens – FM26</h3>
+            <h3>Repérez vos Newgens</h3>
           </div>
-          <p>Exportez uniquement la liste de vos newgens depuis FM26 au format CSV et importez-la ici.</p>
-          <p>L'outil détecte automatiquement les newgens, calcule leurs attributs dès leur spawn et vous indique leur meilleur poste pour ne rater aucune pépite.</p>
+          <p>Pas besoin d'un export séparé : le même effectif complet suffit.</p>
+          <p>Dans le Labo des Postes, filtre cet import sur les Newgens (contrat débutant à ± 1 jour de l'export) pour cibler directement les nouvelles pépites et leur poste idéal.</p>
         </div>
       </div>
 

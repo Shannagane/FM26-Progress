@@ -100,26 +100,6 @@
   min-width: 160px;
 }
 
-.import-type-badge {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 2px 8px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.import-type-badge-effectif {
-  background: color-mix(in srgb, var(--blue-400) 16%, transparent);
-  color: var(--blue-400);
-}
-
-.import-type-badge-newgens {
-  background: color-mix(in srgb, var(--violet) 18%, transparent);
-  color: var(--violet);
-}
-
 .import-meta {
   display: flex;
   flex-direction: column;

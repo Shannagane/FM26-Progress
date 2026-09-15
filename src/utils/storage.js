@@ -1,6 +1,5 @@
 const STORAGE_KEY = 'fm26-tracker-snapshots-v2';
 const OLD_STORAGE_KEY = 'fm26-tracker-snapshots-v1';
-const NEWGENS_STORAGE_KEY = 'fm26-tracker-newgens-v1';
 
 function generateSnapshotId() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
@@ -15,7 +14,7 @@ function generateSnapshotId() {
 // - importDate : date/heure réelle à laquelle le CSV a été chargé dans l'application
 //
 // `makeSnapshotStore` fabrique un jeu de fonctions load/save/add/remove/clear liées à une
-// clé localStorage donnée : sert à la fois à l'effectif suivi et aux imports Newgens.
+// clé localStorage donnée.
 function makeSnapshotStore(storageKey, oldStorageKey) {
   function save(snapshots) {
     localStorage.setItem(storageKey, JSON.stringify(snapshots));
@@ -86,22 +85,15 @@ function makeSnapshotStore(storageKey, oldStorageKey) {
 }
 
 const squadStore = makeSnapshotStore(STORAGE_KEY, OLD_STORAGE_KEY);
-const newgensStore = makeSnapshotStore(NEWGENS_STORAGE_KEY);
 
 export const loadSnapshots = squadStore.load;
 export const addSnapshot = squadStore.add;
 export const removeSnapshot = squadStore.remove;
 export const clearSnapshots = squadStore.clear;
 
-export const loadNewgensSnapshots = newgensStore.load;
-export const addNewgensSnapshot = newgensStore.add;
-export const removeNewgensSnapshot = newgensStore.remove;
-export const clearNewgensSnapshots = newgensStore.clear;
-
 // Etat courant = fusion de tous les joueurs vus, avec les données du snapshot le plus
 // récent (par date en jeu) où ils apparaissent. `importClub` porte le nom du club saisi
 // à l'import (snapshot.csvName), distinct de la colonne "Club" du CSV lui-même.
-// Utilisé aussi bien pour l'effectif suivi que pour les Newgens.
 export function getCurrentPlayers(snapshots) {
   const ordered = [...snapshots].sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate));
   const byId = new Map();
@@ -112,8 +104,6 @@ export function getCurrentPlayers(snapshots) {
   });
   return Array.from(byId.values());
 }
-
-export const getCurrentNewgens = getCurrentPlayers;
 
 // Historique chronologique d'un joueur : liste de { csvName, gameDate, importDate, player }
 export function getPlayerSnapshots(snapshots, playerId) {

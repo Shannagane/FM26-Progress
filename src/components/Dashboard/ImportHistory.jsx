@@ -23,28 +23,22 @@ function formatDateTime(iso) {
 }
 
 export default function ImportHistory() {
-  const { snapshots, newgensSnapshots, resetAll, deleteImport, deleteNewgensImport } = useAppData();
+  const { snapshots, resetAll, deleteImport } = useAppData();
   const [selectedClub, setSelectedClub] = useState(ALL_CLUBS);
 
-  const combined = useMemo(() => [
-    ...snapshots.map(s => ({ ...s, type: 'effectif' })),
-    ...newgensSnapshots.map(s => ({ ...s, type: 'newgens' }))
-  ], [snapshots, newgensSnapshots]);
-
   const clubs = useMemo(() => {
-    const set = new Set(combined.map(s => (s.csvName || '').trim()).filter(Boolean));
+    const set = new Set(snapshots.map(s => (s.csvName || '').trim()).filter(Boolean));
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
-  }, [combined]);
+  }, [snapshots]);
 
   function handleDelete(snap) {
     const label = snap.csvName || 'cet import';
     if (confirm(`Supprimer l'import « ${label} » (${formatDate(snap.gameDate)}) ? Cette action est irréversible.`)) {
-      if (snap.type === 'newgens') deleteNewgensImport(snap.id);
-      else deleteImport(snap.id);
+      deleteImport(snap.id);
     }
   }
 
-  if (combined.length === 0) {
+  if (snapshots.length === 0) {
     return (
       <div className="import-history import-history-empty">
         <p>Aucun import pour le moment. Charge un premier CSV pour commencer à suivre tes joueurs.</p>
@@ -52,7 +46,7 @@ export default function ImportHistory() {
     );
   }
 
-  const ordered = combined
+  const ordered = snapshots
     .filter(snap => selectedClub === ALL_CLUBS || (snap.csvName || '').trim() === selectedClub)
     .sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
 
@@ -84,12 +78,9 @@ export default function ImportHistory() {
       )}
       <ul className="import-history-list">
         {ordered.map(snap => (
-          <li key={`${snap.type}-${snap.id}`}>
+          <li key={snap.id}>
             <span className="import-name">
               {snap.csvName || 'Import'}
-              <span className={`import-type-badge import-type-badge-${snap.type}`}>
-                {snap.type === 'newgens' ? 'Newgens' : 'Effectif'}
-              </span>
             </span>
             <span className="import-meta">
               <span className="import-meta-label">Date en jeu</span>

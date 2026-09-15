@@ -90,10 +90,10 @@ export default function NewgensPlayerPage() {
   const { snapshotId, playerId } = useParams();
   const [searchParams] = useSearchParams();
   const method = searchParams.get('method') === 'fm26' ? 'fm26' : 'polynomial';
-  const { snapshots, newgensSnapshots } = useAppData();
+  const squad = searchParams.get('squad') === 'newgens' ? 'newgens' : 'all';
+  const { snapshots } = useAppData();
 
-  const snapshot = snapshots.find(snap => snap.id === snapshotId)
-    || newgensSnapshots.find(snap => snap.id === snapshotId);
+  const snapshot = snapshots.find(snap => snap.id === snapshotId);
   const player = snapshot?.players?.[playerId];
 
   if (!snapshot || !player) {
@@ -123,7 +123,7 @@ export default function NewgensPlayerPage() {
 
   return (
     <div className="newgens-player-page">
-      <Link to={`/newgens/${snapshotId}?method=${method}`} className="back-link">← Retour aux résultats</Link>
+      <Link to={`/newgens/${snapshotId}?method=${method}&squad=${squad}`} className="back-link">← Retour aux résultats</Link>
 
       <div className="newgens-player-header">
         <div className="player-header">

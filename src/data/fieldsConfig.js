@@ -25,7 +25,8 @@ export const IDENTITY_FIELDS = [
   { key: 'rapports_media', label: 'Rapports média', aliases: ['Rapports avec les médias', 'Rapports media', 'Rapports médias', 'Media Handling'] },
   { key: 'projet_court_terme', label: 'Projet à court terme', aliases: ['Projets à court terme', 'Projet a court terme', 'Short Term'] },
   { key: 'projet_long_terme', label: 'Projet à long terme', aliases: ['Projets à long terme', 'Projet a long terme', 'Long Term'] },
-  { key: 'photo', label: 'Photo', aliases: ['Photo', 'Image', 'Photo URL'] }
+  { key: 'photo', label: 'Photo', aliases: ['Photo', 'Image', 'Photo URL'] },
+  { key: 'date_debut_contrat', label: 'Date commencement contrat', aliases: ['Date commencement contrat', 'Date de commencement du contrat', 'Début de contrat', 'Debut de contrat', 'Date début contrat', 'Contract Start', 'Contract Start Date'] }
 ];
 
 // Niveaux de pied considérés faibles / très forts pour la coloration

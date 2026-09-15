@@ -13,19 +13,16 @@ function formatDate(iso) {
 }
 
 export default function NewgensPage() {
-  const { snapshots, newgensSnapshots } = useAppData();
+  const { snapshots } = useAppData();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImportId, setSelectedImportId] = useState('');
   const [method, setMethod] = useState('polynomial');
+  const [squad, setSquad] = useState('all');
 
-  const importsOrdered = useMemo(() => {
-    const combined = [
-      ...snapshots.map(snap => ({ ...snap, type: 'effectif' })),
-      ...newgensSnapshots.map(snap => ({ ...snap, type: 'newgens' }))
-    ];
-    return combined.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
-  }, [snapshots, newgensSnapshots]);
+  const importsOrdered = useMemo(() => (
+    [...snapshots].sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate))
+  ), [snapshots]);
 
   const hasImports = importsOrdered.length > 0;
 
@@ -38,20 +35,21 @@ export default function NewgensPage() {
 
   function openModal() {
     setSelectedImportId('');
+    setSquad('all');
     setModalOpen(true);
   }
 
   function handleConfirm() {
     if (!selectedImportId) return;
-    navigate(`/newgens/${selectedImportId}?method=${method}`);
+    navigate(`/newgens/${selectedImportId}?method=${method}&squad=${squad}`);
     setModalOpen(false);
   }
 
   return (
     <div className="newgens-page">
       <p className="newgens-intro">
-        Le Labo des Postes analyse automatiquement les attributs de tes joueurs importés
-        (effectif complet ou newgens) pour t'indiquer leur poste idéal.
+        Le Labo des Postes analyse automatiquement les attributs de tes joueurs importés pour
+        t'indiquer leur poste idéal — sur l'effectif complet, ou filtré sur tes Newgens.
       </p>
 
       <button type="button" className="newgens-open-modal-btn" onClick={openModal}>
@@ -83,22 +81,32 @@ export default function NewgensPage() {
             </label>
 
             {hasImports ? (
-              <label className="newgens-import-select">
-                <span>Effectif / Import</span>
-                <select value={selectedImportId} onChange={e => setSelectedImportId(e.target.value)}>
-                  <option value="">Sélectionner un import…</option>
-                  {importsOrdered.map(snap => (
-                    <option key={snap.id} value={snap.id}>
-                      {snap.csvName || 'Import'} — {formatDate(snap.gameDate)} · {snap.type === 'newgens' ? 'Newgens' : 'Effectif'} ({Object.keys(snap.players).length} joueur(s))
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <>
+                <label className="newgens-import-select">
+                  <span>Effectif / Import</span>
+                  <select value={selectedImportId} onChange={e => setSelectedImportId(e.target.value)}>
+                    <option value="">Sélectionner un import…</option>
+                    {importsOrdered.map(snap => (
+                      <option key={snap.id} value={snap.id}>
+                        {snap.csvName || 'Import'} — {formatDate(snap.gameDate)} ({Object.keys(snap.players).length} joueur(s))
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="newgens-method-select">
+                  <span>Joueurs à analyser</span>
+                  <select value={squad} onChange={e => setSquad(e.target.value)}>
+                    <option value="all">Effectif complet (tous les joueurs de l'import)</option>
+                    <option value="newgens">Newgens (contrat débutant à ± 1 jour de la date en jeu)</option>
+                  </select>
+                </label>
+              </>
             ) : (
               <p className="newgens-explain-hint">
                 Aucun import pour le moment. Rends-toi sur le{' '}
                 <Link to="/" onClick={() => setModalOpen(false)}>tableau de bord</Link> pour importer ton
-                effectif ou tes newgens.
+                effectif.
               </p>
             )}
 

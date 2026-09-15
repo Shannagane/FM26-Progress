@@ -3,6 +3,7 @@ import { useParams, useSearchParams, Link, Navigate, useNavigate } from 'react-r
 import { useAppData } from '../../context/AppContext.jsx';
 import { computeIdealPosition, getMethodProfiles, formatIdealScore, getIdealScorePercent } from '../../data/newgensPositionProfiles.js';
 import { personalityRank, mediaHandlingRank } from '../../data/personalityRanking.js';
+import { isNewgenByContract } from '../../utils/contractDate.js';
 import SortableHeader from '../Squad/SortableHeader.jsx';
 import './NewgensPage.css';
 
@@ -127,19 +128,19 @@ export default function NewgensResultsPage() {
   const { snapshotId } = useParams();
   const [searchParams] = useSearchParams();
   const method = searchParams.get('method') === 'fm26' ? 'fm26' : 'polynomial';
-  const { snapshots, newgensSnapshots } = useAppData();
+  const squad = searchParams.get('squad') === 'newgens' ? 'newgens' : 'all';
+  const { snapshots } = useAppData();
   const navigate = useNavigate();
   const [sortStates, setSortStates] = useState({});
 
-  const selectedSnapshot = snapshots.find(snap => snap.id === snapshotId)
-    || newgensSnapshots.find(snap => snap.id === snapshotId)
-    || null;
+  const selectedSnapshot = snapshots.find(snap => snap.id === snapshotId) || null;
 
   const profiles = getMethodProfiles(method);
 
   const groupedByProfile = useMemo(() => {
     if (!selectedSnapshot) return {};
-    const eligible = Object.values(selectedSnapshot.players);
+    const eligible = Object.values(selectedSnapshot.players)
+      .filter(player => squad !== 'newgens' || isNewgenByContract(player, selectedSnapshot.gameDate));
 
     const groups = Object.fromEntries(profiles.map(profile => [profile.key, []]));
     eligible.forEach(player => {
@@ -149,7 +150,7 @@ export default function NewgensResultsPage() {
     });
 
     return groups;
-  }, [selectedSnapshot, method, profiles]);
+  }, [selectedSnapshot, method, squad, profiles]);
 
   if (!selectedSnapshot) {
     return <Navigate to="/newgens" replace />;
@@ -172,6 +173,7 @@ export default function NewgensResultsPage() {
       <div className="newgens-results">
         <h3 className="newgens-results-title">
           Résultats — {selectedSnapshot.csvName || 'Import'} ({formatDate(selectedSnapshot.gameDate)})
+          {squad === 'newgens' ? ' · Newgens' : ' · Effectif complet'}
         </h3>
 
         <div className="newgens-score-legend">
@@ -196,7 +198,7 @@ export default function NewgensResultsPage() {
               direction={sortState.direction}
               method={method}
               onSort={sortKey => handleSort(profile.key, sortKey)}
-              onSelectPlayer={player => navigate(`/newgens/${selectedSnapshot.id}/${player.id}?method=${method}`)}
+              onSelectPlayer={player => navigate(`/newgens/${selectedSnapshot.id}/${player.id}?method=${method}&squad=${squad}`)}
             />
           );
         })}

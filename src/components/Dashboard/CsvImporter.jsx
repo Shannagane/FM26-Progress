@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { parseCsvFile, parseNewgensCsvFile } from '../../utils/csvParser.js';
+import { parseCsvFile } from '../../utils/csvParser.js';
 import { useAppData } from '../../context/AppContext.jsx';
 import './CsvImporter.css';
 
 export default function CsvImporter() {
-  const { importPlayers, importNewgens } = useAppData();
+  const { importPlayers } = useAppData();
   const inputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
   const [status, setStatus] = useState(null); // { type: 'success'|'error'|'warning', message }
   const [selectedFile, setSelectedFile] = useState(null);
-  const [importType, setImportType] = useState('effectif'); // 'effectif' | 'newgens'
   const [csvName, setCsvName] = useState('');
   const [gameDate, setGameDate] = useState('');
   const [touched, setTouched] = useState(false);
@@ -33,7 +32,6 @@ export default function CsvImporter() {
       return;
     }
     setSelectedFile(file);
-    setImportType('effectif');
     setCsvName('');
     setGameDate('');
     setTouched(false);
@@ -54,10 +52,7 @@ export default function CsvImporter() {
 
     setImporting(true);
     try {
-      const isNewgens = importType === 'newgens';
-      const { players, unmatchedHeaders, missingRequired } = isNewgens
-        ? await parseNewgensCsvFile(selectedFile)
-        : await parseCsvFile(selectedFile);
+      const { players, unmatchedHeaders, missingRequired } = await parseCsvFile(selectedFile);
 
       if (missingRequired.length > 0) {
         setStatus({
@@ -73,20 +68,15 @@ export default function CsvImporter() {
         return;
       }
 
-      if (isNewgens) {
-        importNewgens(players, new Date(gameDate).toISOString(), csvName.trim());
-      } else {
-        importPlayers(players, new Date(gameDate).toISOString(), csvName.trim());
-      }
+      importPlayers(players, new Date(gameDate).toISOString(), csvName.trim());
 
       const warning = unmatchedHeaders.length > 0
         ? ` (${unmatchedHeaders.length} colonne(s) non reconnue(s) et ignorée(s) : ${unmatchedHeaders.slice(0, 6).join(', ')}${unmatchedHeaders.length > 6 ? '…' : ''})`
         : '';
-      const typeLabel = isNewgens ? ' (Newgens)' : '';
 
       setStatus({
         type: unmatchedHeaders.length > 0 ? 'warning' : 'success',
-        message: `« ${csvName.trim()} »${typeLabel} importé avec succès : ${players.length} joueur(s).${warning}`
+        message: `« ${csvName.trim()} » importé avec succès : ${players.length} joueur(s).${warning}`
       });
       cancelSelection();
     } catch (err) {
@@ -151,25 +141,8 @@ export default function CsvImporter() {
             </div>
 
             <p className="csv-confirm-hint">
-              Indique le type d'import, le club et la date en jeu de cet export avant de terminer l'import.
+              Indique le club et la date en jeu de cet export avant de terminer l'import.
             </p>
-
-            <div className="csv-type-toggle" role="group" aria-label="Type d'import">
-              <button
-                type="button"
-                className={`csv-type-btn ${importType === 'effectif' ? 'csv-type-btn-active' : ''}`}
-                onClick={() => setImportType('effectif')}
-              >
-                Effectif
-              </button>
-              <button
-                type="button"
-                className={`csv-type-btn ${importType === 'newgens' ? 'csv-type-btn-active' : ''}`}
-                onClick={() => setImportType('newgens')}
-              >
-                Newgens
-              </button>
-            </div>
 
             <div className="csv-importer-row">
               <label className="csv-field">

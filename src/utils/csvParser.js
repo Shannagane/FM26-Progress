@@ -34,7 +34,7 @@ function parseNumberLike(value) {
   return Number.isNaN(num) ? value : num;
 }
 
-function parseCsv(file, { requirePoste }) {
+function parseCsv(file) {
   return new Promise((resolve, reject) => {
     Papa.parse(file, {
       header: true,
@@ -82,7 +82,7 @@ function parseCsv(file, { requirePoste }) {
             unmatchedHeaders: unmatched,
             missingRequired: [
               ...(!hasNomColumn ? ['Nom'] : []),
-              ...(requirePoste && !hasPosteColumn ? [posteLabel] : [])
+              ...(!hasPosteColumn ? [posteLabel] : [])
             ]
           });
         } catch (err) {
@@ -95,10 +95,5 @@ function parseCsv(file, { requirePoste }) {
 }
 
 export function parseCsvFile(file) {
-  return parseCsv(file, { requirePoste: true });
-}
-
-// Import "Newgens" : seule la colonne Nom/Joueur est obligatoire (pas de poste attendu).
-export function parseNewgensCsvFile(file) {
-  return parseCsv(file, { requirePoste: false });
+  return parseCsv(file);
 }
