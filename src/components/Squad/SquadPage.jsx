@@ -11,13 +11,23 @@ import './SquadPage.css';
 const NUMERIC_SORT_KEYS = ['matchs_joues', 'buts', 'passes_decisives', 'note_moyenne'];
 const ALL_CLUBS = '__all__';
 
+// Les champs identité (dont "note moyenne") sont stockés en texte brut par le parseur CSV et
+// utilisent parfois la virgule française comme séparateur décimal (ex : "7,45") : on la
+// convertit en point avant conversion en nombre, sinon Number() renvoie NaN pour toutes les
+// valeurs et le tri ne fait plus rien.
+function parseNumericValue(raw) {
+  if (raw === '' || raw === undefined || raw === null) return null;
+  const num = Number(String(raw).trim().replace(',', '.'));
+  return Number.isNaN(num) ? null : num;
+}
+
 // Comparateur numérique qui envoie toujours les valeurs manquantes en fin de liste,
 // quel que soit le sens de tri choisi.
 function compareNumeric(a, b, key, direction) {
-  const va = a[key] === '' || a[key] === undefined || a[key] === null ? null : Number(a[key]);
-  const vb = b[key] === '' || b[key] === undefined || b[key] === null ? null : Number(b[key]);
-  const aValid = va !== null && !Number.isNaN(va);
-  const bValid = vb !== null && !Number.isNaN(vb);
+  const va = parseNumericValue(a[key]);
+  const vb = parseNumericValue(b[key]);
+  const aValid = va !== null;
+  const bValid = vb !== null;
 
   if (!aValid && !bValid) return 0;
   if (!aValid) return 1;
@@ -79,9 +89,19 @@ export default function SquadPage() {
 
   const [selectedClub, setSelectedClub] = useState(() => findDefaultClub(players));
   const [collapsed, setCollapsed] = useState({});
+  const [selectedCategories, setSelectedCategories] = useState(() => new Set());
 
   function toggleCategory(key) {
     setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function toggleCategoryFilter(key) {
+    setSelectedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   }
 
   function handleSort(catKey, sortKey) {
@@ -115,10 +135,13 @@ export default function SquadPage() {
       const cat = getPositionCategory(p.poste);
       groups.get(cat.key).push(p);
     });
-    return POSITION_CATEGORIES
+    const categoriesToShow = selectedCategories.size > 0
+      ? POSITION_CATEGORIES.filter(cat => selectedCategories.has(cat.key))
+      : POSITION_CATEGORIES;
+    return categoriesToShow
       .map(cat => ({ ...cat, players: groups.get(cat.key) }))
       .filter(cat => cat.players.length > 0);
-  }, [visiblePlayers]);
+  }, [visiblePlayers, selectedCategories]);
 
   if (players.length === 0) {
     return (
@@ -139,6 +162,8 @@ export default function SquadPage() {
         clubs={clubs}
         selectedClub={selectedClub}
         setSelectedClub={setSelectedClub}
+        selectedCategories={selectedCategories}
+        onToggleCategory={toggleCategoryFilter}
       />
 
       {groupedByPosition.map(cat => {

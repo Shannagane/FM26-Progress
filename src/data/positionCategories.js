@@ -6,31 +6,37 @@ export const POSITION_CATEGORIES = [
   {
     key: 'gardien',
     label: 'Gardien',
+    color: 'green',
     postes: ['GB']
   },
   {
     key: 'defenseur',
     label: 'Défenseur',
+    color: 'blue',
     postes: ['D(C)', 'D(G)', 'D(D)', 'AL(D)', 'AL(G)']
   },
   {
     key: 'milieu',
     label: 'Milieu',
+    color: 'orange',
     postes: ['MD', 'M(C)', 'MD,M(C)', 'M', 'M(D)', 'M(G)']
   },
   {
     key: 'ailier',
     label: 'Ailier',
+    color: 'teal',
     postes: ['MO(D)', 'MO(G)', 'M/MO(DG)']
   },
   {
     key: 'attaquant',
     label: 'Attaquant',
+    color: 'red',
     postes: ['BT(C)', 'M/MO(C)', 'MO(C)']
   },
   {
     key: 'autre',
     label: 'Autre',
+    color: 'neutral',
     postes: []
   }
 ];
