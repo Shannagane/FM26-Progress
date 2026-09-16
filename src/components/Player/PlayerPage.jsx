@@ -53,7 +53,7 @@ export default function PlayerPage() {
       <PlayerTabs active={tab} onChange={setTab} />
 
       {tab === 'attributs' && <AttributesTab player={player} snapshots={snapshots} />}
-      {tab === 'diagramme' && <AttributeRadar player={player} />}
+      {tab === 'diagramme' && <AttributeRadar player={player} snapshots={snapshots} />}
       {tab === 'historique' && <HistoryTab player={player} snapshots={snapshots} />}
       {tab === 'personnalite' && <PersonalityTab player={player} snapshots={snapshots} />}
       {tab === 'stats' && <StatsTab player={player} snapshots={snapshots} />}

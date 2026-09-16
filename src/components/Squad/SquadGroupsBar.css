@@ -1,0 +1,65 @@
+.squad-groups-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.squad-groups-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.squad-groups-select select {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  max-width: 220px;
+}
+.squad-groups-select select:focus { border-color: var(--blue-400); }
+
+.squad-new-group-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 13px;
+  border-radius: var(--radius-s);
+  border: 1.5px dashed var(--text-secondary);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.squad-new-group-btn svg { width: 13px; height: 13px; }
+.squad-new-group-btn:hover {
+  border-color: var(--blue-400);
+  color: var(--blue-400);
+}
+
+@media (max-width: 560px) {
+  .squad-groups-bar {
+    flex-wrap: wrap;
+  }
+  .squad-groups-select {
+    width: 100%;
+  }
+  .squad-groups-select select {
+    max-width: none;
+    flex: 1;
+  }
+  .squad-new-group-btn {
+    margin-left: 0;
+  }
+}

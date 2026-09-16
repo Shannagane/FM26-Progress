@@ -1,0 +1,112 @@
+.clubs-page {
+  width: 100%;
+}
+
+.clubs-page-intro {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.clubs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.club-card {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+}
+
+.club-card-logo {
+  flex-shrink: 0;
+  width: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.club-card-logo svg {
+  width: 32px;
+  height: 32px;
+}
+.club-card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.club-card-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 18px;
+}
+
+.club-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: inherit;
+}
+.club-card-header:hover h3 { color: var(--blue-400); }
+
+.club-card-header h3 {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.club-card-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.club-card-group-chip {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+.club-card-group-chip:hover {
+  color: var(--blue-400);
+  border-color: var(--blue-400);
+}
+
+.clubs-page-other-groups {
+  margin-top: 24px;
+}
+.clubs-page-other-groups h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 1900px) {
+  .clubs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}

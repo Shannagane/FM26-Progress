@@ -140,7 +140,7 @@ export default function NewgensResultsPage() {
   const groupedByProfile = useMemo(() => {
     if (!selectedSnapshot) return {};
     const eligible = Object.values(selectedSnapshot.players)
-      .filter(player => squad !== 'newgens' || isNewgenByContract(player, selectedSnapshot.gameDate));
+      .filter(player => squad !== 'newgens' || isNewgenByContract(player));
 
     const groups = Object.fromEntries(profiles.map(profile => [profile.key, []]));
     eligible.forEach(player => {

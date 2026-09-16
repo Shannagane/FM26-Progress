@@ -111,6 +111,24 @@ function RatingIcon() {
   );
 }
 
+function ConcededIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M3 4h18v6c0 4-4 7-9 9-5-2-9-5-9-9Z" />
+      <path d="M3 8h18M8 4v6.5M16 4v6.5" />
+    </svg>
+  );
+}
+
+function CleanSheetIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6Z" strokeLinejoin="round" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
+
 function StatItem({ icon, label, value, extra }) {
   return (
     <div className="stat-item">
@@ -151,8 +169,8 @@ function StatsRows({ data, isGK }) {
 
       {isGK && (
         <div className="stats-row stats-row-gk">
-          <StatItem label="Buts encaissés" value={data.buts_encaisses} />
-          <StatItem label="Cage inviolée" value={data.cages_inviolees} />
+          <StatItem icon={<ConcededIcon />} label="Buts encaissés" value={data.buts_encaisses} />
+          <StatItem icon={<CleanSheetIcon />} label="Cage inviolée" value={data.cages_inviolees} />
         </div>
       )}
     </div>

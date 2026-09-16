@@ -47,10 +47,18 @@ export default function NewgensPage() {
 
   return (
     <div className="newgens-page">
-      <p className="newgens-intro">
-        Le Labo des Postes analyse automatiquement les attributs de tes joueurs importés pour
-        t'indiquer leur poste idéal — sur l'effectif complet, ou filtré sur tes Newgens.
-      </p>
+      <div className="newgens-explain-card">
+        <div className="newgens-explain-header">
+          <span className="newgens-explain-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3Z" />
+              <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
+            </svg>
+          </span>
+          <h3>Le Labo des Postes</h3>
+        </div>
+        <p>Le Labo analyse automatiquement les attributs de vos joueurs importés pour révéler leur poste idéal.</p>
+      </div>
 
       <button type="button" className="newgens-open-modal-btn" onClick={openModal}>
         Choisir une méthode et un effectif
@@ -98,7 +106,7 @@ export default function NewgensPage() {
                   <span>Joueurs à analyser</span>
                   <select value={squad} onChange={e => setSquad(e.target.value)}>
                     <option value="all">Effectif complet (tous les joueurs de l'import)</option>
-                    <option value="newgens">Newgens (contrat débutant à ± 1 jour de la date en jeu)</option>
+                    <option value="newgens">Newgens (contrat = "date#1" dans le CSV)</option>
                   </select>
                 </label>
               </>

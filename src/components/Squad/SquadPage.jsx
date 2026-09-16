@@ -1,11 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { comparePositions } from '../../data/positionOrder.js';
 import { POSITION_CATEGORIES, getPositionCategory } from '../../data/positionCategories.js';
 import { normalize } from '../../utils/text.js';
+import { loadGroups, addGroup, removeGroup } from '../../utils/groups.js';
+import SquadGroupsBar from './SquadGroupsBar.jsx';
 import SquadFilters from './SquadFilters.jsx';
 import SquadTable from './SquadTable.jsx';
+import CreateGroupModal from './CreateGroupModal.jsx';
 import './SquadPage.css';
 
 const NUMERIC_SORT_KEYS = ['matchs_joues', 'buts', 'passes_decisives', 'note_moyenne'];
@@ -37,23 +40,6 @@ function compareNumeric(a, b, key, direction) {
   return direction === 'asc' ? diff : -diff;
 }
 
-// Club le plus représenté dans l'effectif importé : sert de sélection par défaut
-// quand plusieurs clubs ont été importés (ex : changement de club en cours de carrière).
-function findDefaultClub(players) {
-  const counts = new Map();
-  players.forEach(p => {
-    const club = (p.importClub || '').trim();
-    if (!club) return;
-    counts.set(club, (counts.get(club) || 0) + 1);
-  });
-  let best = null;
-  let bestCount = 0;
-  counts.forEach((count, club) => {
-    if (count > bestCount) { best = club; bestCount = count; }
-  });
-  return best || ALL_CLUBS;
-}
-
 const DEFAULT_SORT = { sortBy: 'poste', direction: 'asc' };
 
 function sortPlayers(players, sortBy, direction) {
@@ -78,6 +64,9 @@ function sortPlayers(players, sortBy, direction) {
 
 export default function SquadPage() {
   const { players } = useAppData();
+  const { club: clubParam } = useParams();
+  const navigate = useNavigate();
+  const selectedClub = decodeURIComponent(clubParam);
   // Tri indépendant par catégorie de poste : { [catKey]: { sortBy, direction } }
   const [sortStates, setSortStates] = useState({});
   const [search, setSearch] = useState('');
@@ -87,12 +76,27 @@ export default function SquadPage() {
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
   }, [players]);
 
-  const [selectedClub, setSelectedClub] = useState(() => findDefaultClub(players));
   const [collapsed, setCollapsed] = useState({});
   const [selectedCategories, setSelectedCategories] = useState(() => new Set());
+  const [groups, setGroups] = useState(() => loadGroups());
+  const [groupModalOpen, setGroupModalOpen] = useState(false);
+
+  function handleClubChange(newClub) {
+    navigate(`/effectif/${encodeURIComponent(newClub)}`);
+  }
 
   function toggleCategory(key) {
     setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function handleCreateGroup(name, playerIds) {
+    setGroups(prev => addGroup(prev, name, playerIds, selectedClub === ALL_CLUBS ? null : selectedClub));
+    setGroupModalOpen(false);
+  }
+
+  function handleDeleteGroup(groupId, groupName) {
+    if (!confirm(`Supprimer le groupe « ${groupName} » ? Cette action est irréversible.`)) return;
+    setGroups(prev => removeGroup(prev, groupId));
   }
 
   function toggleCategoryFilter(key) {
@@ -114,12 +118,18 @@ export default function SquadPage() {
     });
   }
 
-  const visiblePlayers = useMemo(() => {
-    let list = players;
-
+  // Joueurs du club affiché, sans le filtre de recherche (sert de base à la modale de
+  // création de groupe : on doit pouvoir choisir n'importe quel joueur du club, pas
+  // seulement ceux qui correspondent à la recherche en cours).
+  const clubPlayers = useMemo(() => {
     if (clubs.length > 1 && selectedClub !== ALL_CLUBS) {
-      list = list.filter(p => (p.importClub || '').trim() === selectedClub);
+      return players.filter(p => (p.importClub || '').trim() === selectedClub);
     }
+    return players;
+  }, [players, clubs, selectedClub]);
+
+  const visiblePlayers = useMemo(() => {
+    let list = clubPlayers;
 
     if (search.trim()) {
       const q = normalize(search);
@@ -127,7 +137,12 @@ export default function SquadPage() {
     }
 
     return list;
-  }, [players, clubs, selectedClub, search]);
+  }, [clubPlayers, search]);
+
+  // Groupes du club affiché (ou tous, en vue "Tous les clubs").
+  const clubGroups = useMemo(() => (
+    selectedClub === ALL_CLUBS ? groups : groups.filter(g => g.club === selectedClub)
+  ), [groups, selectedClub]);
 
   const groupedByPosition = useMemo(() => {
     const groups = new Map(POSITION_CATEGORIES.map(cat => [cat.key, []]));
@@ -143,6 +158,14 @@ export default function SquadPage() {
       .filter(cat => cat.players.length > 0);
   }, [visiblePlayers, selectedCategories]);
 
+  // Groupes personnalisés du club affiché : même filtre recherche que le reste de la page,
+  // croisé avec la liste de joueurs choisie par l'utilisateur à la création du groupe.
+  const groupedCustom = useMemo(() => {
+    return clubGroups
+      .map(g => ({ ...g, players: visiblePlayers.filter(p => g.playerIds.includes(p.id)) }))
+      .filter(g => g.players.length > 0);
+  }, [clubGroups, visiblePlayers]);
+
   if (players.length === 0) {
     return (
       <div className="squad-page">
@@ -156,12 +179,19 @@ export default function SquadPage() {
 
   return (
     <div className="squad-page">
+      <Link to="/effectif" className="back-link">← Retour aux clubs</Link>
+
+      <SquadGroupsBar
+        groups={clubGroups}
+        onCreateGroupClick={() => setGroupModalOpen(true)}
+      />
+
       <SquadFilters
         search={search}
         setSearch={setSearch}
         clubs={clubs}
         selectedClub={selectedClub}
-        setSelectedClub={setSelectedClub}
+        setSelectedClub={handleClubChange}
         selectedCategories={selectedCategories}
         onToggleCategory={toggleCategoryFilter}
       />
@@ -199,6 +229,61 @@ export default function SquadPage() {
           </div>
         );
       })}
+
+      {groupedCustom.map(group => {
+        const isOpen = !collapsed[group.id];
+        const groupSort = sortStates[group.id] || DEFAULT_SORT;
+        const sortedPlayers = sortPlayers(group.players, groupSort.sortBy, groupSort.direction);
+        return (
+          <div className="squad-category squad-custom-group" key={group.id}>
+            <div className="squad-category-header squad-custom-group-header">
+              <button
+                type="button"
+                className="squad-custom-group-toggle"
+                onClick={() => toggleCategory(group.id)}
+                aria-expanded={isOpen}
+              >
+                <svg
+                  className={`squad-category-chevron ${isOpen ? 'squad-category-chevron-open' : ''}`}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
+                >
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+                <h3 className="squad-category-title">{group.name}</h3>
+                <span className="squad-category-count">{group.players.length} joueur(s)</span>
+              </button>
+              <button
+                type="button"
+                className="squad-custom-group-delete"
+                onClick={() => handleDeleteGroup(group.id, group.name)}
+                aria-label={`Supprimer le groupe ${group.name}`}
+                title="Supprimer ce groupe"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m2 0-.8 12.2a2 2 0 0 1-2 1.8H8.8a2 2 0 0 1-2-1.8L6 7" />
+                </svg>
+              </button>
+            </div>
+            {isOpen && (
+              <SquadTable
+                players={sortedPlayers}
+                sortBy={groupSort.sortBy}
+                direction={groupSort.direction}
+                onSort={sortKey => handleSort(group.id, sortKey)}
+                showClub={clubs.length > 1 && selectedClub === ALL_CLUBS}
+              />
+            )}
+          </div>
+        );
+      })}
+
+      {groupModalOpen && (
+        <CreateGroupModal
+          players={clubPlayers}
+          onClose={() => setGroupModalOpen(false)}
+          onSave={handleCreateGroup}
+        />
+      )}
     </div>
   );
 }

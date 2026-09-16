@@ -23,20 +23,6 @@ export default function Dashboard() {
           <p>Exportez votre effectif depuis FM26 au format CSV et importez-le ici.</p>
           <p>L'outil va analyser l'ensemble de vos joueurs pour vous donner une vue complète de votre effectif.</p>
         </div>
-
-        <div className="dashboard-explain-card dashboard-explain-card-newgens">
-          <div className="dashboard-explain-header">
-            <span className="dashboard-explain-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3Z" />
-                <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
-              </svg>
-            </span>
-            <h3>Repérez vos Newgens</h3>
-          </div>
-          <p>Pas besoin d'un export séparé : le même effectif complet suffit.</p>
-          <p>Dans le Labo des Postes, filtre cet import sur les Newgens (contrat débutant à ± 1 jour de l'export) pour cibler directement les nouvelles pépites et leur poste idéal.</p>
-        </div>
       </div>
 
       <div className="dashboard-importer">

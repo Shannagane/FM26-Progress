@@ -1,0 +1,147 @@
+.attr-info-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.attr-info-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: none;
+  color: var(--text-secondary);
+  background: transparent;
+  cursor: help;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+.attr-info-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.attr-info-icon:hover,
+.attr-info-icon:focus-visible {
+  color: var(--blue-400);
+}
+
+.attr-info-tooltip {
+  position: fixed;
+  z-index: 200;
+  width: 520px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  cursor: default;
+}
+
+.attr-info-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.attr-info-header-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.attr-info-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attr-info-header-meta {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.attr-info-poste {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--blue-400);
+  background: color-mix(in srgb, var(--blue-400) 16%, transparent);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.attr-info-groups {
+  display: flex;
+  gap: 16px;
+}
+
+.attr-info-column {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.attr-info-group h5 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  margin: 0 0 6px;
+}
+
+.attr-info-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.attr-info-group li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.attr-info-label {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attr-info-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .attr-info-tooltip {
+    width: calc(100vw - 24px);
+  }
+  .attr-info-groups {
+    flex-wrap: wrap;
+  }
+  .attr-info-column {
+    min-width: 120px;
+  }
+}

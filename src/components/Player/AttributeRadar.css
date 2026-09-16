@@ -1,10 +1,63 @@
+.attribute-radar-legend {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 12px;
+}
+
+.radar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.radar-legend-swatch {
+  width: 16px;
+  height: 0;
+  border-top-width: 2px;
+  border-top-style: solid;
+}
+
+.radar-legend-swatch-current {
+  border-top-color: var(--green);
+}
+
+.radar-legend-swatch-prev {
+  border-top-color: var(--grey-mid);
+  border-top-style: dashed;
+}
+
+.attribute-radar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .attribute-radar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .attribute-radar {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   padding: 20px 18px 8px;
-  margin-bottom: 18px;
+  overflow: hidden;
+  container-type: inline-size;
   --radar-grid: color-mix(in srgb, var(--text-secondary) 35%, transparent);
+}
+
+/* Les libellés d'axe (côté gauche/droite) débordent parfois du cadre du graphique :
+   on laisse le SVG interne déborder plutôt que le tronquer, la carte elle-même
+   coupe proprement (overflow: hidden ci-dessus) si ça dépasse encore. */
+.attribute-radar .recharts-wrapper,
+.attribute-radar svg {
+  overflow: visible;
 }
 
 .attribute-radar-title {
@@ -24,4 +77,26 @@
   fill: var(--green);
   font-size: 16px;
   font-weight: 700;
+}
+
+/* Les libellés les plus longs (ex : "Sorties dans la surface") ont besoin de place en plus
+   quand la carte elle-même est étroite — que ce soit un petit écran, ou une grille à 2
+   colonnes sur un écran large qui réduit quand même chaque carte. On se base sur la largeur
+   réelle de la carte (container query), pas sur celle de la fenêtre. */
+@container (max-width: 480px) {
+  .radar-tick-label {
+    font-size: 10.5px;
+  }
+  .radar-tick-value {
+    font-size: 13px;
+  }
+}
+
+@container (max-width: 350px) {
+  .radar-tick-label {
+    font-size: 9.5px;
+  }
+  .radar-tick-value {
+    font-size: 12px;
+  }
 }

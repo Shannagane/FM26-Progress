@@ -3,6 +3,12 @@
   gap: 4px;
   border-bottom: 1px solid var(--border);
   margin: 22px 0 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.player-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .player-tab {
@@ -15,6 +21,8 @@
   color: var(--text-secondary);
   border-bottom: 2px solid transparent;
   transform: translateY(1px);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .player-tab:hover {
@@ -24,4 +32,12 @@
 .player-tab-active {
   color: var(--blue-500);
   border-bottom-color: var(--blue-500);
+}
+
+@media (max-width: 500px) {
+  .player-tab {
+    margin-right: 16px;
+    font-size: 13.5px;
+    padding: 8px 2px;
+  }
 }

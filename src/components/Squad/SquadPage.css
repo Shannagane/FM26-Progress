@@ -2,6 +2,15 @@
   width: 100%;
 }
 
+.back-link {
+  display: inline-block;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.back-link:hover { color: var(--blue-400); }
+
 .squad-empty {
   padding: 60px 20px;
   text-align: center;
@@ -60,6 +69,44 @@
   border: 1px solid var(--border);
   padding: 2px 10px;
   border-radius: 20px;
+}
+
+.squad-custom-group-header {
+  padding-right: 4px;
+}
+
+.squad-custom-group-toggle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.squad-custom-group-delete {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  border-radius: var(--radius-s);
+}
+.squad-custom-group-delete svg { width: 14px; height: 14px; }
+.squad-custom-group-delete:hover {
+  color: var(--red);
+  background: color-mix(in srgb, var(--red) 12%, transparent);
 }
 
 @media (min-width: 1900px) {

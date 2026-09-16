@@ -1,18 +1,19 @@
 .top-progressions-columns {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px 28px;
   margin-bottom: 22px;
 }
 
 @media (min-width: 900px) {
   .top-progressions-columns {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 
 .top-progressions {
   margin-bottom: 0;
+  min-width: 0;
 }
 
 .top-progressions-title {
@@ -26,6 +27,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 14px;
+  min-width: 0;
 }
 
 .top-progressions-card {
@@ -33,6 +35,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   padding: 16px 18px;
+  min-width: 0;
 }
 
 .top-progressions-club {
@@ -107,5 +110,5 @@
 .top-progressions-value-neutral { color: var(--text-secondary); }
 
 @media (max-width: 420px) {
-  .top-progressions-grid { grid-template-columns: 1fr; }
+  .top-progressions-grid { grid-template-columns: minmax(0, 1fr); }
 }

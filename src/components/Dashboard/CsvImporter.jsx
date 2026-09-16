@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { parseCsvFile } from '../../utils/csvParser.js';
 import { useAppData } from '../../context/AppContext.jsx';
+import { saveClubLogo } from '../../utils/clubLogos.js';
 import './CsvImporter.css';
+
+const MAX_LOGO_SIZE = 1024 * 1024; // 1 Mo, pour ne pas gonfler démesurément le localStorage
 
 export default function CsvImporter() {
   const { importPlayers } = useAppData();
@@ -13,6 +16,10 @@ export default function CsvImporter() {
   const [gameDate, setGameDate] = useState('');
   const [touched, setTouched] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [logoError, setLogoError] = useState(null);
+  const logoInputRef = useRef(null);
 
   const modalOpen = !!selectedFile;
 
@@ -36,6 +43,7 @@ export default function CsvImporter() {
     setGameDate('');
     setTouched(false);
     setStatus(null);
+    resetLogoSelection();
   }
 
   function cancelSelection() {
@@ -44,6 +52,35 @@ export default function CsvImporter() {
     setGameDate('');
     setTouched(false);
     if (inputRef.current) inputRef.current.value = '';
+    resetLogoSelection();
+  }
+
+  function resetLogoSelection() {
+    setLogoFile(null);
+    setLogoPreview(null);
+    setLogoError(null);
+    if (logoInputRef.current) logoInputRef.current.value = '';
+  }
+
+  function handleLogoSelect(file) {
+    setLogoError(null);
+    if (!file) {
+      setLogoFile(null);
+      setLogoPreview(null);
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      setLogoError("Ce fichier n'est pas une image.");
+      return;
+    }
+    if (file.size > MAX_LOGO_SIZE) {
+      setLogoError('Image trop lourde (1 Mo maximum).');
+      return;
+    }
+    setLogoFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setLogoPreview(reader.result);
+    reader.readAsDataURL(file);
   }
 
   async function handleConfirmImport() {
@@ -69,6 +106,7 @@ export default function CsvImporter() {
       }
 
       importPlayers(players, new Date(gameDate).toISOString(), csvName.trim());
+      if (logoPreview) saveClubLogo(csvName.trim(), logoPreview);
 
       const warning = unmatchedHeaders.length > 0
         ? ` (${unmatchedHeaders.length} colonne(s) non reconnue(s) et ignorée(s) : ${unmatchedHeaders.slice(0, 6).join(', ')}${unmatchedHeaders.length > 6 ? '…' : ''})`
@@ -141,7 +179,10 @@ export default function CsvImporter() {
             </div>
 
             <p className="csv-confirm-hint">
-              Indique le club et la date en jeu de cet export avant de terminer l'import.
+              Indique le Nom du club, la Date en jeu et le logo club de cet export avant de terminer l'import.
+            </p>
+            <p className="csv-confirm-hint">
+              Donne le même Nom de club quand tu importe différents CSV pour le même club.
             </p>
 
             <div className="csv-importer-row">
@@ -168,6 +209,24 @@ export default function CsvImporter() {
                 {dateInvalid && <span className="csv-field-error">Ce champ est obligatoire.</span>}
               </label>
             </div>
+
+            <label className="csv-field csv-logo-field">
+              <span>Importer logo club</span>
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/*"
+                onChange={e => handleLogoSelect(e.target.files?.[0])}
+              />
+              {logoError && <span className="csv-field-error">{logoError}</span>}
+            </label>
+
+            {logoPreview && (
+              <div className="csv-logo-preview-row">
+                <img src={logoPreview} alt="Aperçu du logo" className="csv-logo-preview" />
+                <span>{logoFile?.name}</span>
+              </div>
+            )}
 
             <div className="csv-confirm-actions">
               <button type="button" className="csv-confirm-secondary" onClick={cancelSelection}>Annuler</button>

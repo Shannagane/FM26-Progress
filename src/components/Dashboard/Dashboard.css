@@ -46,10 +46,6 @@
   background: var(--blue-500);
 }
 
-.dashboard-explain-card-newgens .dashboard-explain-icon {
-  background: var(--violet);
-}
-
 .dashboard-explain-header h3 {
   font-size: 15px;
   font-weight: 700;

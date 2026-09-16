@@ -70,6 +70,39 @@
   box-shadow: var(--shadow);
 }
 
+.csv-logo-field {
+  margin-bottom: 18px;
+}
+
+.csv-logo-field input[type='file'] {
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+.csv-logo-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+
+.csv-logo-preview {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  padding: 3px;
+}
+
 .csv-confirm-actions {
   display: flex;
   justify-content: flex-end;

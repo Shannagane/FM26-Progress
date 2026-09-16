@@ -40,8 +40,6 @@ export default function SquadFilters({ search, setSearch, clubs, selectedClub, s
           </select>
         </label>
       )}
-
-      <span className="squad-filters-hint">Clique sur un en-tête de colonne pour trier</span>
     </div>
   );
 }

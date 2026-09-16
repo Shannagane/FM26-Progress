@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useState, useCallback } from
 import {
   loadSnapshots, addSnapshot, removeSnapshot, clearSnapshots as clearStoredSnapshots, getCurrentPlayers
 } from '../utils/storage';
+import { pruneOrphanedGroups } from '../utils/groups';
 
 const AppContext = createContext(null);
 
@@ -21,11 +22,15 @@ export function AppProvider({ children }) {
     clearStoredSnapshots();
     setSnapshots([]);
     setLastImportInfo(null);
+    pruneOrphanedGroups([]);
   }, []);
 
   const deleteImport = useCallback((snapshotId) => {
     const updated = removeSnapshot(snapshots, snapshotId);
     setSnapshots(updated);
+    // Si c'était le dernier import d'un club, ses groupes personnalisés n'ont plus aucun
+    // joueur : on les supprime aussi plutôt que de les laisser traîner indéfiniment.
+    pruneOrphanedGroups(getCurrentPlayers(updated));
   }, [snapshots]);
 
   const getPlayerById = useCallback((id) => players.find(p => p.id === id) || null, [players]);

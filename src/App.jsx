@@ -3,7 +3,9 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Sidebar from './components/Layout/Sidebar.jsx';
 import Header from './components/Layout/Header.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
+import ClubsPage from './components/Squad/ClubsPage.jsx';
 import SquadPage from './components/Squad/SquadPage.jsx';
+import GroupPage from './components/Squad/GroupPage.jsx';
 import PlayerPage from './components/Player/PlayerPage.jsx';
 import HelpPage from './components/Help/HelpPage.jsx';
 import NewgensPage from './components/Newgens/NewgensPage.jsx';
@@ -21,6 +23,11 @@ const TITLES = {
 function resolveTitle(pathname) {
   if (TITLES[pathname]) return TITLES[pathname];
   if (/^\/newgens\/[^/]+$/.test(pathname)) return 'Résultats — Labo des Postes';
+  if (/^\/effectif\/groupe\/[^/]+$/.test(pathname)) return 'Groupe';
+  if (/^\/effectif\/[^/]+$/.test(pathname)) {
+    const club = decodeURIComponent(pathname.split('/').pop());
+    return club === '__all__' ? 'Effectif — Tous les clubs' : `Effectif — ${club}`;
+  }
   return 'Fiche joueur';
 }
 
@@ -38,7 +45,9 @@ export default function App() {
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/effectif" element={<SquadPage />} />
+            <Route path="/effectif" element={<ClubsPage />} />
+            <Route path="/effectif/groupe/:groupId" element={<GroupPage />} />
+            <Route path="/effectif/:club" element={<SquadPage />} />
             <Route path="/newgens" element={<NewgensPage />} />
             <Route path="/newgens/:snapshotId" element={<NewgensResultsPage />} />
             <Route path="/newgens/:snapshotId/:playerId" element={<NewgensPlayerPage />} />

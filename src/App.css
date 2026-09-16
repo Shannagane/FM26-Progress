@@ -41,18 +41,21 @@
   }
 }
 
-/* Grands écrans / 4K : on laisse le sidebar fixe, mais on aère le contenu
-   et on évite que les pages ne s'étirent de façon disproportionnée
-   (chaque page définit son propre max-width et se centre elle-même). */
+/* Grands écrans / 4K : on laisse le sidebar fixe, mais on aère le contenu et on l'empêche
+   de s'étirer sur toute la largeur (qui rendrait les tableaux/cartes disproportionnés) en
+   le centrant dans une largeur maximale confortable à lire. */
 @media (min-width: 1600px) {
   .app-main {
     padding: 36px 48px 80px;
+    max-width: 1760px;
+    margin: 0 auto;
   }
 }
 
 @media (min-width: 2400px) {
   .app-main {
     padding: 48px 64px 100px;
+    max-width: 2000px;
     font-size: 1.08em;
   }
 }
