@@ -4,7 +4,7 @@ import './SquadFilters.css';
 
 const CATEGORY_BUTTONS = POSITION_CATEGORIES.filter(cat => cat.key !== 'autre');
 
-export default function SquadFilters({ search, setSearch, clubs, selectedClub, setSelectedClub, selectedCategories, onToggleCategory }) {
+export default function SquadFilters({ search, setSearch, selectedCategories, onToggleCategory }) {
   return (
     <div className="squad-filters">
       <input
@@ -28,18 +28,6 @@ export default function SquadFilters({ search, setSearch, clubs, selectedClub, s
           </button>
         ))}
       </div>
-
-      {clubs.length > 1 && (
-        <label className="squad-club-select">
-          <span>Club</span>
-          <select value={selectedClub} onChange={e => setSelectedClub(e.target.value)}>
-            <option value="__all__">Tous les clubs ({clubs.length})</option>
-            {clubs.map(club => (
-              <option key={club} value={club}>{club}</option>
-            ))}
-          </select>
-        </label>
-      )}
     </div>
   );
 }

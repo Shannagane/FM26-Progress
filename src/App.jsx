@@ -7,17 +7,19 @@ import ClubsPage from './components/Squad/ClubsPage.jsx';
 import SquadPage from './components/Squad/SquadPage.jsx';
 import GroupPage from './components/Squad/GroupPage.jsx';
 import PlayerPage from './components/Player/PlayerPage.jsx';
-import HelpPage from './components/Help/HelpPage.jsx';
+import DepthPage from './components/Depth/DepthPage.jsx';
 import NewgensPage from './components/Newgens/NewgensPage.jsx';
 import NewgensResultsPage from './components/Newgens/NewgensResultsPage.jsx';
 import NewgensPlayerPage from './components/Newgens/NewgensPlayerPage.jsx';
+import TutoImportPage from './components/Tuto/TutoImportPage.jsx';
 import './App.css';
 
 const TITLES = {
   '/': 'Tableau de bord',
   '/effectif': 'Effectif',
+  '/profondeur': "Profondeur d'effectif",
   '/newgens': 'Labo des Postes',
-  '/aide': 'Aide'
+  '/tuto-import': 'Tuto import'
 };
 
 function resolveTitle(pathname) {
@@ -48,11 +50,12 @@ export default function App() {
             <Route path="/effectif" element={<ClubsPage />} />
             <Route path="/effectif/groupe/:groupId" element={<GroupPage />} />
             <Route path="/effectif/:club" element={<SquadPage />} />
+            <Route path="/profondeur" element={<DepthPage />} />
             <Route path="/newgens" element={<NewgensPage />} />
             <Route path="/newgens/:snapshotId" element={<NewgensResultsPage />} />
             <Route path="/newgens/:snapshotId/:playerId" element={<NewgensPlayerPage />} />
             <Route path="/joueur/:id" element={<PlayerPage />} />
-            <Route path="/aide" element={<HelpPage />} />
+            <Route path="/tuto-import" element={<TutoImportPage />} />
           </Routes>
         </main>
       </div>

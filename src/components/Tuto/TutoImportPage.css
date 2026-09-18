@@ -1,0 +1,48 @@
+.tuto-page {
+  width: 100%;
+}
+
+.tuto-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 1100px) {
+  .tuto-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1900px) {
+  .tuto-columns {
+    gap: 28px;
+  }
+}
+
+.tuto-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 22px 24px;
+  height: 100%;
+}
+
+.tuto-section h2 {
+  font-size: 16.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.tuto-steps {
+  margin-top: 10px;
+}
+
+@media (max-width: 560px) {
+  .tuto-section {
+    padding: 16px 16px;
+  }
+}

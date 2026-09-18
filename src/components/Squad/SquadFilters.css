@@ -43,35 +43,12 @@
 .squad-category-btn-active { background: var(--btn-color); color: #FFFFFF; }
 
 .squad-category-btn-green { --btn-color: #16A34A; }
-.squad-category-btn-blue { --btn-color: var(--blue-600); }
+.squad-category-btn-blue { --btn-color: var(--violet); }
 .squad-category-btn-orange { --btn-color: #D97706; }
 .squad-category-btn-teal { --btn-color: #0D9488; }
 .squad-category-btn-red { --btn-color: var(--red); }
 
-.squad-club-select {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.squad-club-select select {
-  font-family: var(--font-body);
-  font-size: 13.5px;
-  padding: 8px 12px;
-  border-radius: var(--radius-s);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-primary);
-  max-width: 220px;
-}
-.squad-club-select select:focus { border-color: var(--blue-400); }
-
 @media (max-width: 560px) {
   .squad-search { max-width: none; }
   .squad-category-filters { width: 100%; }
-  .squad-club-select { width: 100%; }
-  .squad-club-select select { max-width: none; flex: 1; }
 }

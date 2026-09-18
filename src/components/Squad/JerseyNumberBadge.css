@@ -10,7 +10,7 @@
 }
 
 .jersey-badge-green { background: #16A34A; }
-.jersey-badge-blue { background: var(--blue-600); }
+.jersey-badge-blue { background: var(--violet); }
 .jersey-badge-orange { background: #D97706; }
 .jersey-badge-teal { background: #0D9488; }
 .jersey-badge-red { background: var(--red); }

@@ -3,23 +3,18 @@ import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { comparePositions } from '../../data/positionOrder.js';
 import { loadGroups, updateGroup, removeGroup } from '../../utils/groups.js';
+import { COLUMN_BY_KEY } from '../../data/columnsConfig.js';
+import { loadColumnKeys, saveColumnKeys } from '../../utils/columnPrefs.js';
 import SquadTable from './SquadTable.jsx';
 import CreateGroupModal from './CreateGroupModal.jsx';
+import EditColumnsModal from './EditColumnsModal.jsx';
 import './GroupPage.css';
 
-const NUMERIC_SORT_KEYS = ['matchs_joues', 'buts', 'passes_decisives', 'note_moyenne'];
-
-function parseNumericValue(raw) {
-  if (raw === '' || raw === undefined || raw === null) return null;
-  const num = Number(String(raw).trim().replace(',', '.'));
-  return Number.isNaN(num) ? null : num;
-}
-
-function compareNumeric(a, b, key, direction) {
-  const va = parseNumericValue(a[key]);
-  const vb = parseNumericValue(b[key]);
-  const aValid = va !== null;
-  const bValid = vb !== null;
+function compareNumeric(a, b, column, direction) {
+  const va = column.getSortValue(a);
+  const vb = column.getSortValue(b);
+  const aValid = va !== null && va !== undefined && !Number.isNaN(va);
+  const bValid = vb !== null && vb !== undefined && !Number.isNaN(vb);
 
   if (!aValid && !bValid) return 0;
   if (!aValid) return 1;
@@ -34,16 +29,15 @@ const DEFAULT_SORT = { sortBy: 'poste', direction: 'asc' };
 function sortPlayers(players, sortBy, direction) {
   return [...players].sort((a, b) => {
     if (sortBy === 'poste') return comparePositions(a.poste, b.poste, direction);
-    if (sortBy === 'age') {
-      const diff = (Number(a.age) || 0) - (Number(b.age) || 0);
-      return direction === 'asc' ? diff : -diff;
-    }
     if (sortBy === 'club') {
       const cmp = (a.importClub || '').localeCompare(b.importClub || '', 'fr');
       return direction === 'asc' ? cmp : -cmp;
     }
-    if (NUMERIC_SORT_KEYS.includes(sortBy)) {
-      return compareNumeric(a, b, sortBy, direction);
+    const column = sortBy !== 'nom' ? COLUMN_BY_KEY[sortBy] : null;
+    if (column) {
+      if (column.numeric) return compareNumeric(a, b, column, direction);
+      const cmp = String(column.getSortValue(a) || '').localeCompare(String(column.getSortValue(b) || ''), 'fr');
+      return direction === 'asc' ? cmp : -cmp;
     }
     const cmp = (a.nom || '').localeCompare(b.nom || '', 'fr');
     return direction === 'asc' ? cmp : -cmp;
@@ -60,6 +54,19 @@ export default function GroupPage() {
   const [sort, setSort] = useState(DEFAULT_SORT);
   const [groups, setGroups] = useState(() => loadGroups());
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [columnKeys, setColumnKeys] = useState(() => loadColumnKeys());
+  const [columnsModalOpen, setColumnsModalOpen] = useState(false);
+
+  const activeColumns = useMemo(
+    () => columnKeys.map(key => COLUMN_BY_KEY[key]).filter(Boolean),
+    [columnKeys]
+  );
+
+  function handleSaveColumns(keys) {
+    setColumnKeys(keys);
+    saveColumnKeys(keys);
+    setColumnsModalOpen(false);
+  }
 
   const group = useMemo(() => groups.find(g => g.id === groupId), [groups, groupId]);
 
@@ -116,6 +123,13 @@ export default function GroupPage() {
         <h2 className="group-page-title">{group.name}</h2>
         <span className="squad-category-count">{groupPlayers.length} joueur(s)</span>
         <div className="group-page-actions">
+          <button type="button" className="group-page-action-btn" onClick={() => setColumnsModalOpen(true)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+              <path d="M9.5 4.5v15M15 4.5v15" />
+            </svg>
+            Colonnes
+          </button>
           <button type="button" className="group-page-action-btn" onClick={() => setEditModalOpen(true)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5.5 16z" strokeLinejoin="round" />
@@ -143,6 +157,7 @@ export default function GroupPage() {
           direction={sort.direction}
           onSort={handleSort}
           showClub={clubs.size > 1}
+          columns={activeColumns}
         />
       )}
 
@@ -152,6 +167,14 @@ export default function GroupPage() {
           group={group}
           onClose={() => setEditModalOpen(false)}
           onSave={handleSaveEdit}
+        />
+      )}
+
+      {columnsModalOpen && (
+        <EditColumnsModal
+          selectedKeys={columnKeys}
+          onClose={() => setColumnsModalOpen(false)}
+          onSave={handleSaveColumns}
         />
       )}
     </div>

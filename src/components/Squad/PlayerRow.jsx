@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import JerseyNumberBadge from './JerseyNumberBadge.jsx';
 import AttributesInfo from './AttributesInfo.jsx';
 import { isGoalkeeper } from '../../data/positionOrder.js';
+import { attributeColorClass } from '../../data/attributesConfig.js';
 import './PlayerRow.css';
 
-export default function PlayerRow({ player, showClub }) {
+export default function PlayerRow({ player, showClub, columns }) {
   const navigate = useNavigate();
 
   return (
@@ -22,11 +23,18 @@ export default function PlayerRow({ player, showClub }) {
         </span>
       </td>
       {showClub && <td className="cell-club">{player.importClub || '–'}</td>}
-      <td>{player.age || '–'}</td>
-      <td className="cell-numeric">{player.matchs_joues ?? '–'}</td>
-      <td className="cell-numeric">{player.buts ?? '–'}</td>
-      <td className="cell-numeric">{player.passes_decisives ?? '–'}</td>
-      <td className="cell-numeric">{player.note_moyenne ?? '–'}</td>
+      {columns.map(col => {
+        const isAttr = col.key.startsWith('attr:');
+        const value = col.getDisplayValue(player);
+        return (
+          <td
+            key={col.key}
+            className={`${col.numeric ? 'cell-numeric' : ''} ${isAttr ? attributeColorClass(value) : ''}`}
+          >
+            {value}
+          </td>
+        );
+      })}
     </tr>
   );
 }

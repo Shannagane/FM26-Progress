@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useParams, useSearchParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
-import { computeIdealPosition, getMethodProfiles, formatIdealScore, getIdealScorePercent } from '../../data/newgensPositionProfiles.js';
+import { computeIdealPosition, getMethodProfiles, formatIdealScore, getIdealScorePercent, scoreTier } from '../../data/newgensPositionProfiles.js';
 import { personalityRank, mediaHandlingRank } from '../../data/personalityRanking.js';
 import { isNewgenByContract } from '../../utils/contractDate.js';
 import SortableHeader from '../Squad/SortableHeader.jsx';
@@ -11,22 +11,10 @@ const DEFAULT_SORT = { sortBy: 'note', direction: 'desc' };
 
 const SCORE_LEGEND = [
   { tier: 'green', label: 'Excellent' },
-  { tier: 'blue', label: 'Bon' },
+  { tier: 'violet', label: 'Bon' },
   { tier: 'orange', label: 'Moyen' },
   { tier: 'red', label: 'Faible' }
 ];
-
-// Palier de couleur de la note idéale : sur la note brute /20 en méthode FM26, sur le
-// pourcentage (équivalent) en méthode FM23/FM24.
-function scoreTier(value, max = 20) {
-  const v = Number(value);
-  if (Number.isNaN(v)) return 'orange';
-  const ratio = v / max;
-  if (ratio >= 0.8) return 'green';
-  if (ratio >= 0.55) return 'blue';
-  if (ratio >= 0.3) return 'orange';
-  return 'red';
-}
 
 function formatDate(iso) {
   try {

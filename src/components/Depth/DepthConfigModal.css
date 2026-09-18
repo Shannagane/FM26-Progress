@@ -1,0 +1,366 @@
+.depth-config-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 9, 12, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: depth-config-fade 0.15s ease;
+}
+
+@keyframes depth-config-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.depth-config-modal {
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #14161C;
+  border: 1px solid #242832;
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: depth-config-pop 0.18s ease;
+}
+
+@keyframes depth-config-pop {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.depth-config-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #242832;
+  flex-shrink: 0;
+}
+
+.depth-config-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+}
+
+.depth-config-close {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #242832;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.depth-config-close svg { width: 15px; height: 15px; }
+.depth-config-close:hover { border-color: #FF4D6D; color: #FF4D6D; }
+
+.depth-config-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  overflow-y: auto;
+}
+
+.depth-config-block-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 12px;
+}
+
+.depth-config-empty-hint {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Bloc club */
+.depth-config-club-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.depth-config-club-card,
+.depth-config-formation-card,
+.depth-config-method-card {
+  position: relative;
+  border-radius: 14px;
+  border: 1.5px solid #242832;
+  background: #0F1115;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  font-family: var(--font-body);
+}
+.depth-config-club-card:hover,
+.depth-config-formation-card:hover,
+.depth-config-method-card:hover {
+  border-color: rgba(0, 255, 135, 0.4);
+}
+.depth-config-club-card-active,
+.depth-config-formation-card-active,
+.depth-config-method-card-active {
+  border-color: #00FF87;
+  background: rgba(0, 255, 135, 0.1);
+}
+
+.depth-config-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #00FF87;
+  color: #0F1115;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.depth-config-club-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 10px;
+}
+
+.depth-config-club-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #1A1D24;
+}
+.depth-config-club-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.depth-config-club-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Bloc formation */
+.depth-config-formation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.depth-config-formation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px;
+}
+
+.depth-config-mini-pitch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 2.5;
+  background: #0A0B0E;
+  border: 1px solid #242832;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.depth-config-mini-halfway {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.depth-config-mini-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  transform: translate(-50%, -50%);
+  transition: background-color 0.15s ease;
+}
+.depth-config-formation-card-active .depth-config-mini-dot {
+  background: #00FF87;
+  box-shadow: 0 0 4px rgba(0, 255, 135, 0.7);
+}
+
+.depth-config-formation-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.depth-config-formation-tag {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Bloc méthode */
+.depth-config-method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.depth-config-method-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+}
+
+.depth-config-method-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #FFFFFF;
+  padding-right: 20px;
+}
+.depth-config-method-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Footer */
+.depth-config-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 24px;
+  border-top: 1px solid #242832;
+  flex-shrink: 0;
+}
+
+.depth-config-summary {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.depth-config-footer-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.depth-config-cancel {
+  background: transparent;
+  border: 1px solid #242832;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.depth-config-cancel:hover { border-color: rgba(255, 255, 255, 0.3); color: #FFFFFF; }
+
+.depth-config-apply {
+  background: #00FF87;
+  color: #0F1115;
+  font-weight: 900;
+  font-size: 13.5px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 255, 135, 0.35);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.depth-config-apply:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.depth-config-apply:disabled {
+  opacity: 0.4;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+  filter: none;
+}
+
+/* Bloc import (modale Club) */
+.depth-config-import-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.depth-config-import-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 40px 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #242832;
+  background: #0F1115;
+  color: #FFFFFF;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.depth-config-import-row:hover { border-color: rgba(0, 255, 135, 0.4); }
+.depth-config-import-row-active {
+  border-color: #00FF87;
+  background: rgba(0, 255, 135, 0.1);
+}
+
+.depth-config-import-date {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.depth-config-import-count {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 560px) {
+  .depth-config-modal { max-height: 94vh; border-radius: 16px; }
+  .depth-config-header, .depth-config-body, .depth-config-footer { padding-left: 16px; padding-right: 16px; }
+  .depth-config-footer { flex-direction: column; align-items: stretch; }
+  .depth-config-footer-actions { justify-content: stretch; }
+  .depth-config-footer-actions button { flex: 1; }
+}

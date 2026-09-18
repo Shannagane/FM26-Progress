@@ -361,7 +361,9 @@ const FM26_COMPATIBILITY = {
 // Classe le poste FM26 (colonne "M. Poste" du CSV) dans l'un des 8 groupes standardisés
 // de la méthode FM26, pour appliquer la règle de compatibilité ci-dessus. Renvoie null si
 // le poste est absent ou non reconnu (aucune restriction n'est alors appliquée).
-function classifyFm26Group(poste) {
+// Exportée : également utilisée pour classer les postes exacts du terrain (page Profondeur
+// d'effectif), qui a besoin de la même correspondance code -> groupe de poids.
+export function classifyFm26Group(poste) {
   const p = normPoste(poste);
   if (!p) return null;
   if (p === 'GB') return 'gk';
@@ -402,6 +404,18 @@ function methodTables(method) {
 
 export function getMethodProfiles(method) {
   return methodTables(method).profiles;
+}
+
+// Note un joueur pour UN groupe de poids donné, sans restriction de compatibilité (à la
+// différence de computeIdealPosition/scoreAllProfiles). Utilisée par la page Profondeur
+// d'effectif : contrairement au Labo des Postes (qui cherche le meilleur poste d'UN joueur),
+// elle doit pouvoir noter N'IMPORTE quel joueur à UN poste fixé (ex : "quel est le niveau de
+// ce milieu offensif s'il dépanne en latéral droit ?").
+export function scoreForGroup(player, groupKey, method = 'fm26') {
+  const { profiles, score } = methodTables(method);
+  const profile = profiles.find(p => p.key === groupKey);
+  if (!profile) return null;
+  return score(player, profile);
 }
 
 // Restreint les postes candidats pour un joueur donné :
@@ -480,4 +494,16 @@ export function formatIdealScore(score, profile, method = 'polynomial') {
   const percent = getIdealScorePercent(score, profile, method);
   if (percent === null) return score.toFixed(2);
   return `${percent.toFixed(1)}%`;
+}
+
+// Palier de couleur d'une note (brute /max, ou pourcentage /100) : utilisé par le Labo des
+// Postes et la page Profondeur d'effectif pour un code couleur cohérent dans toute l'app.
+export function scoreTier(value, max = 20) {
+  const v = Number(value);
+  if (Number.isNaN(v)) return 'orange';
+  const ratio = v / max;
+  if (ratio >= 0.8) return 'green';
+  if (ratio >= 0.55) return 'violet';
+  if (ratio >= 0.3) return 'orange';
+  return 'red';
 }

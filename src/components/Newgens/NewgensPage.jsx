@@ -105,8 +105,8 @@ export default function NewgensPage() {
                 <label className="newgens-method-select">
                   <span>Joueurs à analyser</span>
                   <select value={squad} onChange={e => setSquad(e.target.value)}>
-                    <option value="all">Effectif complet (tous les joueurs de l'import)</option>
-                    <option value="newgens">Newgens (contrat = "date#1" dans le CSV)</option>
+                    <option value="all">Effectif complet</option>
+                    <option value="newgens">Newgens</option>
                   </select>
                 </label>
               </>

@@ -1,16 +1,8 @@
 :root {
   --font-display: 'Space Grotesk', 'Inter', sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
-  --blue-600: #1D4ED8;
-  --blue-500: #2E5BE8;
-  --blue-400: #3B82F6;
-  --blue-100: #DCE7FF;
-
-  --green: #22C55E;
-  --orange: #F59E0B;
-  --red: #EF4444;
-  --violet: #8e0cda;
   --grey-mid: #9AA3B2;
 
   --radius-s: 6px;
@@ -20,19 +12,39 @@
   --sidebar-width: 232px;
 }
 
+/* Accent "FM26 Unity" : vert néon comme couleur de marque, cohérent avec la page
+   Profondeur d'effectif. Les tons 600/500 restent assez soutenus pour garder un texte
+   blanc lisible sur fond plein (le néon pur #00FF87 en fond avec du blanc serait
+   illisible) ; --accent-glow porte le néon pur pour les liserés/halos/points où la
+   couleur du texte à côté est maîtrisée séparément. Noms de variables --blue-* conservés
+   (utilisés dans tout le CSS existant) pour ne pas avoir à toucher chaque fichier :
+   seules leurs valeurs changent selon le thème.
+   En thème clair, le vert néon illisible sur blanc est remplacé par des teintes plus
+   soutenues qui gardent la même identité sans casser le contraste. */
 [data-theme='dark'] {
-  --bg: #181819;
-  --bg-elevated: #1E1E1F;
-  --surface: #181818;
-  --surface-hover: #232324;
-  --border: #2A2A2B;
-  --text-primary: #F2F5FA;
-  --text-secondary: #8C96AC;
-  --text-muted: #5C6680;
-  --sidebar-bg: #101011;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --bg: #0B0D11;
+  --bg-elevated: #171A21;
+  --surface: #14161C;
+  --surface-hover: #1D2129;
+  --border: #242832;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9AA3B8;
+  --text-muted: #6B7590;
+  --sidebar-bg: #0A0C10;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
   --attr-white: #E7EBF3;
-  --attr-empty: #3A4258;
+  --attr-empty: #333A48;
+
+  --blue-600: #0E9D57;
+  --blue-500: #12B868;
+  --blue-400: #22D480;
+  --blue-100: #CFFFE7;
+  --accent-glow: #00FF87;
+
+  --green: #00FF87;
+  --orange: #FFC857;
+  --red: #FF4D6D;
+  --violet: #7C5CFF;
 }
 
 [data-theme='light'] {
@@ -48,6 +60,17 @@
   --shadow: 0 8px 24px rgba(20, 30, 60, 0.08);
   --attr-white: #33384A;
   --attr-empty: #C7CCDA;
+
+  --blue-600: #0E9D57;
+  --blue-500: #12B868;
+  --blue-400: #0E9D57;
+  --blue-100: #D6F7E7;
+  --accent-glow: #0E9D57;
+
+  --green: #16A34A;
+  --orange: #D97706;
+  --red: #DC2626;
+  --violet: #7C3AED;
 }
 
 * {

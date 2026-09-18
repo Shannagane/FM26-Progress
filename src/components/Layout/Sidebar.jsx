@@ -29,6 +29,17 @@ const NAV_ITEMS = [
     )
   },
   {
+    to: '/profondeur',
+    label: "Profondeur d'effectif",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <rect x="3.5" y="13" width="4" height="7.5" rx="1" />
+        <rect x="10" y="8.5" width="4" height="12" rx="1" />
+        <rect x="16.5" y="3.5" width="4" height="17" rx="1" />
+      </svg>
+    )
+  },
+  {
     to: '/newgens',
     label: 'Labo des postes',
     icon: (
@@ -37,19 +48,35 @@ const NAV_ITEMS = [
         <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
       </svg>
     )
-  },
+  }
+];
+
+const NAV_ITEMS_SECONDARY = [
   {
-    to: '/aide',
-    label: 'Aide',
+    to: '/tuto-import',
+    label: 'Tuto import',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <circle cx="12" cy="12" r="9" />
-        <path d="M9.5 9.3a2.5 2.5 0 0 1 4.9.8c0 1.7-2.2 2-2.4 3.4" />
-        <circle cx="12" cy="16.7" r="0.15" fill="currentColor" stroke="currentColor" strokeWidth="1.4" />
+        <path d="M10 8.5v7l6-3.5-6-3.5Z" strokeLinejoin="round" />
       </svg>
     )
   }
 ];
+
+function NavItem({ item, onNavigate }) {
+  return (
+    <NavLink
+      to={item.to}
+      end={item.to === '/'}
+      onClick={onNavigate}
+      className={({ isActive }) => `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`}
+    >
+      <span className="sidebar-icon">{item.icon}</span>
+      {item.label}
+    </NavLink>
+  );
+}
 
 export default function Sidebar({ open, onNavigate }) {
   return (
@@ -57,16 +84,11 @@ export default function Sidebar({ open, onNavigate }) {
       <Logo />
       <nav className="sidebar-nav">
         {NAV_ITEMS.map(item => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === '/'}
-            onClick={onNavigate}
-            className={({ isActive }) => `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`}
-          >
-            <span className="sidebar-icon">{item.icon}</span>
-            {item.label}
-          </NavLink>
+          <NavItem key={item.to} item={item} onNavigate={onNavigate} />
+        ))}
+        <div className="sidebar-separator" />
+        {NAV_ITEMS_SECONDARY.map(item => (
+          <NavItem key={item.to} item={item} onNavigate={onNavigate} />
         ))}
       </nav>
       <div className="sidebar-footer">

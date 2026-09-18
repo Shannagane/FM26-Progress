@@ -42,7 +42,7 @@ export default function ProgressChart({ attrLabel, history }) {
             formatter={(value) => [value, label]}
             labelFormatter={(label, payload) => payload?.[0]?.payload?.csvName ? `${payload[0].payload.csvName} · ${label}` : label}
           />
-          <Line type="monotone" dataKey="value" stroke="#1D4ED8" strokeWidth={2.5} dot={{ r: 4, fill: '#1D4ED8' }} activeDot={{ r: 6 }} />
+          <Line type="monotone" dataKey="value" stroke="var(--blue-600)" strokeWidth={2.5} dot={{ r: 4, fill: 'var(--blue-600)' }} activeDot={{ r: 6 }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

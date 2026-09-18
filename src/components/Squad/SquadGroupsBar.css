@@ -26,8 +26,15 @@
 }
 .squad-groups-select select:focus { border-color: var(--blue-400); }
 
-.squad-new-group-btn {
+.squad-groups-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.squad-edit-columns-btn,
+.squad-new-group-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -36,13 +43,26 @@
   font-weight: 600;
   padding: 7px 13px;
   border-radius: var(--radius-s);
-  border: 1.5px dashed var(--text-secondary);
   background: transparent;
-  color: var(--text-secondary);
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
+.squad-edit-columns-btn svg,
 .squad-new-group-btn svg { width: 13px; height: 13px; }
+
+.squad-edit-columns-btn {
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+}
+.squad-edit-columns-btn:hover {
+  border-color: var(--blue-400);
+  color: var(--blue-400);
+}
+
+.squad-new-group-btn {
+  border: 1.5px dashed var(--text-secondary);
+  color: var(--text-secondary);
+}
 .squad-new-group-btn:hover {
   border-color: var(--blue-400);
   color: var(--blue-400);
@@ -59,7 +79,14 @@
     max-width: none;
     flex: 1;
   }
-  .squad-new-group-btn {
+  .squad-groups-actions {
     margin-left: 0;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .squad-edit-columns-btn,
+  .squad-new-group-btn {
+    flex: 1;
+    justify-content: center;
   }
 }

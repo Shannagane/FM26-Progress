@@ -18,7 +18,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   padding: 18px 20px;
-  max-width: 480px;
+  width: 100%;
   margin-bottom: 22px;
 }
 
@@ -54,11 +54,14 @@
 
 .newgens-explain-card > p {
   font-size: 13.5px;
+  text-align: center;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .newgens-open-modal-btn {
+  display: block;
+  margin: 0 auto;
   background: var(--blue-600);
   color: #FFFFFF;
   font-weight: 600;
@@ -254,12 +257,12 @@
 }
 
 .newgens-score-legend-dot-green { background: var(--green); }
-.newgens-score-legend-dot-blue { background: var(--blue-400); }
+.newgens-score-legend-dot-violet { background: var(--violet); }
 .newgens-score-legend-dot-orange { background: var(--orange); }
 .newgens-score-legend-dot-red { background: var(--red); }
 
 .newgens-score-text-green { color: var(--green); }
-.newgens-score-text-blue { color: var(--blue-400); }
+.newgens-score-text-violet { color: var(--violet); }
 .newgens-score-text-orange { color: var(--orange); }
 .newgens-score-text-red { color: var(--red); }
 
