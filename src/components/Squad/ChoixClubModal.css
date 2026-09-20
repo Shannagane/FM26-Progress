@@ -118,7 +118,9 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  /* --bg-elevated (cette ligne) vaut la même chose que --surface (.clubmodal) en thème
+     clair : sans une bordure plus marquée, la ligne se fond dans la modale. */
+  border: 1px solid var(--row-divider);
   border-radius: var(--radius-s);
   background: var(--bg-elevated);
   color: var(--text-primary);
@@ -206,17 +208,18 @@
 .clubmodal-cancel:hover { border-color: var(--text-primary); color: var(--text-primary); }
 
 .clubmodal-apply {
-  background: #00FF87;
-  color: #0F1115;
+  background: var(--accent-glow);
+  color: #FFFFFF;
   font-weight: 900;
   font-size: 13.5px;
   padding: 12px 22px;
   border-radius: var(--radius-s);
   border: none;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 135, 0.35);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-glow) 35%, transparent);
   transition: filter 0.15s ease, transform 0.15s ease;
 }
+[data-theme='dark'] .clubmodal-apply { color: #0F1115; }
 .clubmodal-apply:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .clubmodal-apply:disabled {
   opacity: 0.4;

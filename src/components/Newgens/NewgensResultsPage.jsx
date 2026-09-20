@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useSearchParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { computeIdealPosition, getMethodProfiles, formatIdealScore, getIdealScorePercent, scoreTier } from '../../data/newgensPositionProfiles.js';
@@ -49,7 +49,7 @@ function sortAnalyzed(list, sortBy, direction) {
   return sorted;
 }
 
-function ProfileTable({ profile, entries, sortBy, direction, onSort, onSelectPlayer, method }) {
+function ProfileTable({ profile, entries, sortBy, direction, onSort, onSelectPlayer }) {
   const headerProps = { sortBy, direction, onSort };
 
   return (
@@ -81,7 +81,7 @@ function ProfileTable({ profile, entries, sortBy, direction, onSort, onSelectPla
             </thead>
             <tbody>
               {entries.map(({ player, score }) => {
-                const percent = getIdealScorePercent(score, profile, method);
+                const percent = getIdealScorePercent(score, profile);
                 const tier = percent === null ? scoreTier(score, 20) : scoreTier(percent, 100);
                 return (
                   <tr
@@ -98,7 +98,7 @@ function ProfileTable({ profile, entries, sortBy, direction, onSort, onSelectPla
                     <td>{player.rapports_media || '–'}</td>
                     <td className="cell-numeric">
                       <span className={`newgens-score-value newgens-score-text-${tier}`}>
-                        {formatIdealScore(score, profile, method)}
+                        {formatIdealScore(score, profile)}
                       </span>
                     </td>
                   </tr>
@@ -115,7 +115,6 @@ function ProfileTable({ profile, entries, sortBy, direction, onSort, onSelectPla
 export default function NewgensResultsPage() {
   const { snapshotId } = useParams();
   const [searchParams] = useSearchParams();
-  const method = searchParams.get('method') === 'fm26' ? 'fm26' : 'polynomial';
   const squad = searchParams.get('squad') === 'newgens' ? 'newgens' : 'all';
   const { snapshots } = useAppData();
   const navigate = useNavigate();
@@ -123,7 +122,7 @@ export default function NewgensResultsPage() {
 
   const selectedSnapshot = snapshots.find(snap => snap.id === snapshotId) || null;
 
-  const profiles = getMethodProfiles(method);
+  const profiles = getMethodProfiles();
 
   const groupedByProfile = useMemo(() => {
     if (!selectedSnapshot) return {};
@@ -132,13 +131,13 @@ export default function NewgensResultsPage() {
 
     const groups = Object.fromEntries(profiles.map(profile => [profile.key, []]));
     eligible.forEach(player => {
-      const ideal = computeIdealPosition(player, method);
+      const ideal = computeIdealPosition(player);
       if (!ideal) return;
       groups[ideal.profile.key].push({ player, score: ideal.score });
     });
 
     return groups;
-  }, [selectedSnapshot, method, squad, profiles]);
+  }, [selectedSnapshot, squad, profiles]);
 
   if (!selectedSnapshot) {
     return <Navigate to="/newgens" replace />;
@@ -184,9 +183,8 @@ export default function NewgensResultsPage() {
               entries={entries}
               sortBy={sortState.sortBy}
               direction={sortState.direction}
-              method={method}
               onSort={sortKey => handleSort(profile.key, sortKey)}
-              onSelectPlayer={player => navigate(`/newgens/${selectedSnapshot.id}/${player.id}?method=${method}&squad=${squad}`)}
+              onSelectPlayer={player => navigate(`/newgens/${selectedSnapshot.id}/${player.id}?squad=${squad}`)}
             />
           );
         })}

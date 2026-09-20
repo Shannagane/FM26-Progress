@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { syncFacepackFolder } from './utils/facepack.js';
 import Sidebar from './components/Layout/Sidebar.jsx';
 import Header from './components/Layout/Header.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
@@ -12,6 +13,7 @@ import NewgensPage from './components/Newgens/NewgensPage.jsx';
 import NewgensResultsPage from './components/Newgens/NewgensResultsPage.jsx';
 import NewgensPlayerPage from './components/Newgens/NewgensPlayerPage.jsx';
 import TutoImportPage from './components/Tuto/TutoImportPage.jsx';
+import TutoFacepackPage from './components/Tuto/TutoFacepackPage.jsx';
 import './App.css';
 
 const TITLES = {
@@ -19,7 +21,8 @@ const TITLES = {
   '/effectif': 'Effectif',
   '/profondeur': "Profondeur d'effectif",
   '/newgens': 'Labo des Postes',
-  '/tuto-import': 'Tuto import'
+  '/tuto-import': 'Tuto import',
+  '/tuto-facepack': 'Tuto import Facepacks'
 };
 
 function resolveTitle(pathname) {
@@ -37,6 +40,14 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const title = resolveTitle(location.pathname);
+
+  useEffect(() => { syncFacepackFolder(); }, []);
+
+  // Repart en haut de page à chaque changement de route (sinon la position de scroll de la
+  // page précédente reste affichée telle quelle sur la nouvelle page).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="app-shell">
@@ -56,6 +67,7 @@ export default function App() {
             <Route path="/newgens/:snapshotId/:playerId" element={<NewgensPlayerPage />} />
             <Route path="/joueur/:id" element={<PlayerPage />} />
             <Route path="/tuto-import" element={<TutoImportPage />} />
+            <Route path="/tuto-facepack" element={<TutoFacepackPage />} />
           </Routes>
         </main>
       </div>

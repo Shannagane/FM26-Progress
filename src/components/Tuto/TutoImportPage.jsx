@@ -1,4 +1,3 @@
-import React from 'react';
 import TutoStep from './TutoStep.jsx';
 import ViewDownloadCard from './ViewDownloadCard.jsx';
 import './TutoImportPage.css';

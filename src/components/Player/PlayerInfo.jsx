@@ -1,4 +1,3 @@
-import React from 'react';
 import { footColorClass } from '../../data/fieldsConfig.js';
 import { computeIdealPosition } from '../../data/newgensPositionProfiles.js';
 import './PlayerInfo.css';
@@ -54,15 +53,14 @@ function InfoItem({ icon, label, value, className = '' }) {
   );
 }
 
-function idealPositionLabel(player, method) {
-  const ideal = computeIdealPosition(player, method);
+function idealPositionLabel(player) {
+  const ideal = computeIdealPosition(player);
   if (!ideal) return null;
   return ideal.profile.label;
 }
 
 export default function PlayerInfo({ player }) {
-  const bestPosteFm26 = idealPositionLabel(player, 'fm26');
-  const bestPosteFm24 = idealPositionLabel(player, 'polynomial');
+  const bestPoste = idealPositionLabel(player);
 
   return (
     <div className="player-info">
@@ -71,8 +69,7 @@ export default function PlayerInfo({ player }) {
         <InfoItem icon={<HeightIcon />} label="Taille" value={player.taille} />
         <InfoItem icon={<FootIcon />} label="Pied gauche" value={player.pied_gauche} className={footColorClass(player.pied_gauche)} />
         <InfoItem icon={<FootIcon mirrored />} label="Pied droit" value={player.pied_droit} className={footColorClass(player.pied_droit)} />
-        <InfoItem icon={<PositionIcon />} label="Meilleur poste FM26" value={bestPosteFm26} />
-        <InfoItem icon={<PositionIcon />} label="Meilleur poste FM24" value={bestPosteFm24} />
+        <InfoItem icon={<PositionIcon />} label="Meilleur poste FM24" value={bestPoste} />
       </div>
     </div>
   );

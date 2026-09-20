@@ -35,6 +35,13 @@
 .pitch-dot-rank-2 { fill: #86EFAC; }
 .pitch-dot-rank-3 { fill: var(--orange); }
 
+/* En thème clair, le terrain est vert clair (--pitch-field ci-dessus) : les points rang 1 et
+   rang 3 utilisent la même teinte (--green/--orange) que leur pastille de légende, mais celle-ci
+   se fond dans le terrain (luminance quasi identique). On garde le code couleur (vert = meilleur,
+   orange = risqué) avec des teintes plus soutenues, dédiées au terrain, pour rester lisibles. */
+[data-theme='light'] .pitch-dot-rank-1 { fill: #047857; }
+[data-theme='light'] .pitch-dot-rank-3 { fill: #C2410C; }
+
 .pitch-dot-interior {
   opacity: 0.6;
   stroke-dasharray: 1.6 1.2;

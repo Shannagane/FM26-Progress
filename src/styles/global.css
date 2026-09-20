@@ -3,8 +3,6 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
-  --grey-mid: #9AA3B2;
-
   --radius-s: 6px;
   --radius-m: 10px;
   --radius-l: 16px;
@@ -27,6 +25,7 @@
   --surface: #14161C;
   --surface-hover: #1D2129;
   --border: #242832;
+  --row-divider: #242832;
   --text-primary: #FFFFFF;
   --text-secondary: #9AA3B8;
   --text-muted: #6B7590;
@@ -34,6 +33,7 @@
   --shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
   --attr-white: #E7EBF3;
   --attr-empty: #333A48;
+  --grey-mid: #9AA3B2;
 
   --blue-600: #0E9D57;
   --blue-500: #12B868;
@@ -45,6 +45,8 @@
   --orange: #FFC857;
   --red: #FF4D6D;
   --violet: #7C5CFF;
+  --blue: #0a3591;
+  --teal: #14E8C0;
 }
 
 [data-theme='light'] {
@@ -53,10 +55,14 @@
   --surface: #FFFFFF;
   --surface-hover: #EEF2FA;
   --border: #E1E6F0;
+  /* --border seul est presque invisible entre deux zones blanches (--surface et
+     --bg-elevated valent toutes les deux #FFFFFF en thème clair) : les séparateurs de ligne
+     du tableau Effectif en avaient besoin d'un plus marqué pour rester visibles. */
+  --row-divider: #CBD3E3;
   --text-primary: #10131C;
   --text-secondary: #565F73;
   --text-muted: #99A1B3;
-  --sidebar-bg: #0A0E1A;
+  --sidebar-bg: #FFFFFF;
   --shadow: 0 8px 24px rgba(20, 30, 60, 0.08);
   --attr-white: #33384A;
   --attr-empty: #C7CCDA;
@@ -71,6 +77,9 @@
   --orange: #D97706;
   --red: #DC2626;
   --violet: #7C3AED;
+  --blue: #0a3591;
+  --grey-mid: #6B7280;
+  --teal: #0D9488;
 }
 
 * {
@@ -149,4 +158,13 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+}
+
+/* Pendant le glissement d'une poignée de redimensionnement de colonne (SquadTable) : garde
+   le curseur col-resize et empêche la sélection de texte même si le pointeur quitte la
+   poignée en cours de glissement. */
+.col-resizing,
+.col-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
 }

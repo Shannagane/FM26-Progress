@@ -38,6 +38,13 @@ export function comparePositions(a, b, direction = 'asc') {
   return direction === 'asc' ? rankA - rankB : rankB - rankA;
 }
 
+// La colonne "Position" du CSV liste parfois plusieurs postes séparés par des virgules
+// (ex. "D (C), MD (C)") : on trie sur le premier, le poste principal, comme pour
+// "Meilleur poste".
+export function primaryPosition(value) {
+  return (value || '').toString().split(',')[0];
+}
+
 export function isGoalkeeper(poste) {
   return normPoste(poste) === 'GB';
 }

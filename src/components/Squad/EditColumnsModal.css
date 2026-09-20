@@ -1,11 +1,9 @@
-.edit-columns-modal {
-  max-width: 640px;
-}
-
 .edit-columns-body {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -36,7 +34,9 @@
   gap: 8px;
   padding: 6px 8px 6px 6px;
   border-radius: var(--radius-s);
-  border: 1px solid var(--border);
+  /* --bg-elevated (cet item) vaut la même chose que --surface (la modale) en thème clair :
+     sans une bordure plus marquée, l'item se fond dans la modale. */
+  border: 1px solid var(--row-divider);
   background: var(--bg-elevated);
   cursor: grab;
 }
@@ -108,12 +108,12 @@
 .edit-columns-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 6px;
+  gap: 8px;
 }
 
 @media (min-width: 480px) {
   .edit-columns-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   }
 }
 
@@ -121,9 +121,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   padding: 7px 10px;
   border-radius: var(--radius-s);
-  border: 1px solid var(--border);
+  /* --bg-elevated (cet item) vaut la même chose que --surface (la modale) en thème clair :
+     sans une bordure plus marquée, l'item se fond dans la modale. */
+  border: 1px solid var(--row-divider);
   background: var(--bg-elevated);
   cursor: pointer;
   font-size: 13px;
@@ -144,6 +147,8 @@
 }
 
 .edit-columns-item span {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

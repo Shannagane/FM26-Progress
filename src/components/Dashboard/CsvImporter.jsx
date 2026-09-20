@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { parseCsvFile } from '../../utils/csvParser.js';
 import { useAppData } from '../../context/AppContext.jsx';
 import { saveClubLogo } from '../../utils/clubLogos.js';

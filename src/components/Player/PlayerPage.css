@@ -2,14 +2,23 @@
   width: 100%;
 }
 
-.back-link {
-  display: inline-block;
+/* Bouton plein (et non simple lien texte) : --blue-600 vaut la même valeur (#0E9D57) dans les
+   deux thèmes, donc le bouton garde le même vert sur fond clair comme sur fond sombre — seul le
+   survol est adapté par thème pour rester visible sur les deux fonds. */
+.player-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13.5px;
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: #FFFFFF;
+  background: var(--blue-600);
+  padding: 9px 16px;
+  border-radius: var(--radius-s);
   margin-bottom: 18px;
-  font-weight: 500;
+  transition: background-color 0.15s ease;
 }
-.back-link:hover { color: var(--blue-400); }
+.player-back-button:hover { background: var(--blue-500); }
 
 .player-header {
   display: flex;

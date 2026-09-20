@@ -1,4 +1,3 @@
-import React from 'react';
 import { TIER_LEGEND } from '../../data/attributeHighlights.js';
 import './AttributeLegend.css';
 

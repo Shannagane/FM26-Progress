@@ -24,7 +24,7 @@
 .attribute-legend-swatch-A { background: var(--orange); }
 .attribute-legend-swatch-B { background: var(--violet); }
 .attribute-legend-swatch-C { background: var(--green); }
-.attribute-legend-swatch-D { background: var(--blue-400); }
+.attribute-legend-swatch-D { background: var(--blue); }
 
 .attribute-legend-label {
   font-size: 12.5px;

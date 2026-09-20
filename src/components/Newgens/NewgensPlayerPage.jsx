@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { scoreAllProfiles, formatIdealScore } from '../../data/newgensPositionProfiles.js';
@@ -9,6 +8,7 @@ import PlayerAvatar from '../Squad/PlayerAvatar.jsx';
 import NationFlag from '../Player/NationFlag.jsx';
 import PositionPitch from './PositionPitch.jsx';
 import { formatTransferValue } from '../../utils/transferValue.js';
+import { normalize } from '../../utils/text.js';
 import '../Player/PlayerPage.css';
 import '../Player/PersonalityTab.css';
 import './NewgensPlayerPage.css';
@@ -56,14 +56,13 @@ function FootChip({ description }) {
   );
 }
 
-function FootCheck({ player, profileKey, method }) {
-  const wideKeys = FOOT_CHECK_POSITION_KEYS[method] || [];
-  if (!wideKeys.includes(profileKey)) return null;
+function FootCheck({ player, profileKey }) {
+  if (!FOOT_CHECK_POSITION_KEYS.includes(profileKey)) return null;
 
   const standard = describeFootPreference(player, false);
   if (!standard) return null;
 
-  if (WINGER_POSITION_KEY[method] !== profileKey) {
+  if (WINGER_POSITION_KEY !== profileKey) {
     return (
       <div className="newgens-foot-check">
         <FootChip description={standard} />
@@ -89,7 +88,6 @@ function FootCheck({ player, profileKey, method }) {
 export default function NewgensPlayerPage() {
   const { snapshotId, playerId } = useParams();
   const [searchParams] = useSearchParams();
-  const method = searchParams.get('method') === 'fm26' ? 'fm26' : 'polynomial';
   const squad = searchParams.get('squad') === 'newgens' ? 'newgens' : 'all';
   const { snapshots } = useAppData();
 
@@ -100,18 +98,18 @@ export default function NewgensPlayerPage() {
     return <Navigate to="/newgens" replace />;
   }
 
-  const topPositions = scoreAllProfiles(player, method)
+  const topPositions = scoreAllProfiles(player)
     .filter(entry => entry.score !== null)
     .slice(0, 3);
 
   const pitchDots = topPositions
     .flatMap((entry, index) => {
-      const coords = getPitchPosition(entry.profile.key, method, player);
+      const coords = getPitchPosition(entry.profile.key, player);
       if (!coords) return [];
       const rank = index + 1;
       const dots = [{ key: entry.profile.key, rank, ...coords }];
 
-      if (entry.profile.key === WINGER_POSITION_KEY[method]) {
+      if (entry.profile.key === WINGER_POSITION_KEY) {
         const standard = describeFootPreference(player, false);
         if (standard && (standard.side === 'left' || standard.side === 'right')) {
           dots.push({ key: `${entry.profile.key}-interior`, rank, variant: 'interior', x: 100 - coords.x, y: coords.y });
@@ -123,7 +121,7 @@ export default function NewgensPlayerPage() {
 
   return (
     <div className="newgens-player-page">
-      <Link to={`/newgens/${snapshotId}?method=${method}&squad=${squad}`} className="back-link">← Retour aux résultats</Link>
+      <Link to={`/newgens/${snapshotId}?squad=${squad}`} className="back-link">← Retour aux résultats</Link>
 
       <div className="newgens-player-header">
         <div className="player-header">
@@ -132,7 +130,7 @@ export default function NewgensPlayerPage() {
             <div className="player-header-title-row">
               <h2 className="player-header-name">{player.nom || 'Joueur'}</h2>
               <NationFlag nation={player.nation} />
-              <NationFlag nation={player.nation2} />
+              {normalize(player.nation2) !== normalize(player.nation) && <NationFlag nation={player.nation2} />}
             </div>
             {player.valeur_transfert && (
               <div className="player-header-badges">
@@ -170,15 +168,15 @@ export default function NewgensPlayerPage() {
               <div key={entry.profile.key} className="newgens-top-position-block">
                 <div
                   className="newgens-top-position"
-                  style={{ '--position-accent': getPositionColor(entry.profile.key, method) }}
+                  style={{ '--position-accent': getPositionColor(entry.profile.key) }}
                 >
                   <span className="newgens-top-position-rank">#{index + 1}</span>
                   <span className="newgens-top-position-label">
                     {entry.profile.label} <span className="newgens-top-position-short">{entry.profile.shortLabel}</span>
                   </span>
-                  <span className="newgens-top-position-score">{formatIdealScore(entry.score, entry.profile, method)}</span>
+                  <span className="newgens-top-position-score">{formatIdealScore(entry.score, entry.profile)}</span>
                 </div>
-                <FootCheck player={player} profileKey={entry.profile.key} method={method} />
+                <FootCheck player={player} profileKey={entry.profile.key} />
               </div>
             ))}
           </div>

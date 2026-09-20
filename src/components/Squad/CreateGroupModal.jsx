@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { normalize } from '../../utils/text.js';
+import AttributesInfo from './AttributesInfo.jsx';
 import './CreateGroupModal.css';
 
 // Sert aussi bien à la création qu'à l'édition d'un groupe : passer `group` pré-remplit le
@@ -45,7 +46,7 @@ export default function CreateGroupModal({ players, group, onClose, onSave }) {
 
   return (
     <div className="group-modal-overlay" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="group-modal" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="group-modal create-group-modal" role="dialog" aria-modal="true" aria-label={title}>
         <div className="group-modal-header">
           <h3>{title}</h3>
           <button type="button" className="group-modal-close" onClick={onClose} aria-label="Fermer">
@@ -86,8 +87,10 @@ export default function CreateGroupModal({ players, group, onClose, onSave }) {
             return (
               <label key={player.id} className={`group-modal-player ${checked ? 'group-modal-player-checked' : ''}`}>
                 <input type="checkbox" checked={checked} onChange={() => toggle(player.id)} />
-                <span className="group-modal-player-name">{player.nom}</span>
-                <span className="group-modal-player-poste">{player.poste || '–'}</span>
+                <span className="group-modal-player-identity">
+                  <span className="group-modal-player-name">{player.nom}</span>
+                  <AttributesInfo player={player} />
+                </span>
               </label>
             );
           })}

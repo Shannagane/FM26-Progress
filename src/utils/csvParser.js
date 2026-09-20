@@ -46,9 +46,8 @@ function parseCsv(file) {
           const headerMap = buildHeaderMap(headers);
           const unmatched = headers.filter(h => !headerMap[h]);
 
-          const players = results.data.map((row, idx) => {
+          const rawPlayers = results.data.map(row => {
             const player = {
-              rowIndex: idx,
               attributes: {}
             };
             headers.forEach(header => {
@@ -63,6 +62,27 @@ function parseCsv(file) {
             });
             return player;
           }).filter(p => p.nom); // on ignore les lignes sans nom
+
+          // Un même joueur peut apparaître plusieurs fois dans un seul export FM26 (constaté sur
+          // des CSV réels : la ligne est dupliquée, avec certains champs encore vides sur la
+          // première occurrence — Division, 2ème nation... — et remplis sur la suivante). On
+          // dédoublonne par "Unique ID" (uid) ET même nom (garde-fou : si un uid coïncide entre
+          // deux joueurs au nom différent — export corrompu — on ne les fusionne pas, sinon l'un
+          // des deux disparaîtrait silencieusement de l'import), en gardant la position d'origine
+          // dans le fichier mais les données de la DERNIÈRE occurrence rencontrée pour ce uid,
+          // systématiquement la plus complète dans les cas observés.
+          const uidIndex = new Map();
+          const players = [];
+          rawPlayers.forEach(p => {
+            const existingIndex = p.uid ? uidIndex.get(p.uid) : undefined;
+            const existing = existingIndex !== undefined ? players[existingIndex] : null;
+            if (existing && normalize(existing.nom) === normalize(p.nom)) {
+              players[existingIndex] = p;
+              return;
+            }
+            if (p.uid) uidIndex.set(p.uid, players.length);
+            players.push(p);
+          });
 
           // id stable = nom normalisé (+ suffixe si doublon)
           const seen = new Map();

@@ -1,4 +1,3 @@
-import React from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts';
 import { TECHNIQUE_ATTRS, MENTAL_ATTRS, PHYSIQUE_ATTRS, GARDIEN_ATTRS } from '../../data/attributesConfig.js';
 import { isGoalkeeper } from '../../data/positionOrder.js';

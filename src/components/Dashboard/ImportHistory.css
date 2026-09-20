@@ -87,6 +87,9 @@
   flex-wrap: wrap;
   padding: 12px 14px;
   border-radius: var(--radius-s);
+  /* --bg-elevated (cette ligne) vaut la même chose que --surface (le conteneur) en thème
+     clair : sans bordure, une ligne ne se distingue plus du tout du fond en thème clair. */
+  border: 1px solid var(--row-divider);
   background: var(--bg-elevated);
   font-size: 13.5px;
 }

@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
-import { NEWGENS_METHODS } from '../../data/newgensPositionProfiles.js';
 import './NewgensPage.css';
 
 function formatDate(iso) {
@@ -16,15 +15,30 @@ export default function NewgensPage() {
   const { snapshots } = useAppData();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedClub, setSelectedClub] = useState('');
   const [selectedImportId, setSelectedImportId] = useState('');
-  const [method, setMethod] = useState('polynomial');
   const [squad, setSquad] = useState('all');
 
-  const importsOrdered = useMemo(() => (
-    [...snapshots].sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate))
-  ), [snapshots]);
+  const clubs = useMemo(() => {
+    const set = new Set(snapshots.map(s => (s.csvName || '').trim()).filter(Boolean));
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
+  }, [snapshots]);
 
-  const hasImports = importsOrdered.length > 0;
+  const importsByClub = useMemo(() => {
+    const map = new Map();
+    snapshots.forEach(snap => {
+      const club = (snap.csvName || '').trim();
+      if (!club) return;
+      const list = map.get(club) || [];
+      list.push(snap);
+      map.set(club, list);
+    });
+    map.forEach(list => list.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate)));
+    return map;
+  }, [snapshots]);
+
+  const clubImports = importsByClub.get(selectedClub) || [];
+  const hasImports = clubs.length > 0;
 
   useEffect(() => {
     if (!modalOpen) return;
@@ -34,14 +48,21 @@ export default function NewgensPage() {
   }, [modalOpen]);
 
   function openModal() {
-    setSelectedImportId('');
+    const firstClub = clubs[0] || '';
+    setSelectedClub(firstClub);
+    setSelectedImportId(importsByClub.get(firstClub)?.[0]?.id || '');
     setSquad('all');
     setModalOpen(true);
   }
 
+  function handleClubChange(club) {
+    setSelectedClub(club);
+    setSelectedImportId(importsByClub.get(club)?.[0]?.id || '');
+  }
+
   function handleConfirm() {
     if (!selectedImportId) return;
-    navigate(`/newgens/${selectedImportId}?method=${method}&squad=${squad}`);
+    navigate(`/newgens/${selectedImportId}?squad=${squad}`);
     setModalOpen(false);
   }
 
@@ -55,13 +76,13 @@ export default function NewgensPage() {
               <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
             </svg>
           </span>
-          <h3>Le Labo des Postes</h3>
+          <h3>Le Labo des Postes FM24</h3>
         </div>
         <p>Le Labo analyse automatiquement les attributs de vos joueurs importés pour révéler leur poste idéal.</p>
       </div>
 
       <button type="button" className="newgens-open-modal-btn" onClick={openModal}>
-        Choisir une méthode et un effectif
+        Choisir un effectif
       </button>
 
       {modalOpen && (
@@ -69,9 +90,9 @@ export default function NewgensPage() {
           className="newgens-modal-overlay"
           onMouseDown={e => { if (e.target === e.currentTarget) setModalOpen(false); }}
         >
-          <div className="newgens-modal" role="dialog" aria-modal="true" aria-label="Choisir une méthode et un effectif">
+          <div className="newgens-modal" role="dialog" aria-modal="true" aria-label="Choisir un effectif">
             <div className="newgens-modal-header">
-              <h3>Choisir une méthode et un effectif</h3>
+              <h3>Choisir un effectif</h3>
               <button type="button" className="newgens-modal-close" onClick={() => setModalOpen(false)} aria-label="Fermer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path d="M6 6l12 12M18 6L6 18" />
@@ -79,24 +100,24 @@ export default function NewgensPage() {
               </button>
             </div>
 
-            <label className="newgens-method-select">
-              <span>Méthode de calcul</span>
-              <select value={method} onChange={e => setMethod(e.target.value)}>
-                {NEWGENS_METHODS.map(m => (
-                  <option key={m.key} value={m.key}>{m.label}</option>
-                ))}
-              </select>
-            </label>
-
             {hasImports ? (
               <>
+                <label className="newgens-club-select">
+                  <span>Choix du club</span>
+                  <select value={selectedClub} onChange={e => handleClubChange(e.target.value)}>
+                    {clubs.map(club => (
+                      <option key={club} value={club}>{club}</option>
+                    ))}
+                  </select>
+                </label>
+
                 <label className="newgens-import-select">
-                  <span>Effectif / Import</span>
+                  <span>Choix de l'effectif</span>
                   <select value={selectedImportId} onChange={e => setSelectedImportId(e.target.value)}>
-                    <option value="">Sélectionner un import…</option>
-                    {importsOrdered.map(snap => (
+                    {clubImports.length === 0 && <option value="">Aucun import pour ce club</option>}
+                    {clubImports.map(snap => (
                       <option key={snap.id} value={snap.id}>
-                        {snap.csvName || 'Import'} — {formatDate(snap.gameDate)} ({Object.keys(snap.players).length} joueur(s))
+                        {formatDate(snap.gameDate)} ({Object.keys(snap.players).length} joueur(s))
                       </option>
                     ))}
                   </select>

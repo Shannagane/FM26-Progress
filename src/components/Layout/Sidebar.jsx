@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Logo from './Logo.jsx';
 import './Sidebar.css';
@@ -41,7 +40,7 @@ const NAV_ITEMS = [
   },
   {
     to: '/newgens',
-    label: 'Labo des postes',
+    label: 'Labo des postes FM24',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3Z" />
@@ -54,11 +53,22 @@ const NAV_ITEMS = [
 const NAV_ITEMS_SECONDARY = [
   {
     to: '/tuto-import',
-    label: 'Tuto import',
+    label: 'Tuto import CSV',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <circle cx="12" cy="12" r="9" />
         <path d="M10 8.5v7l6-3.5-6-3.5Z" strokeLinejoin="round" />
+      </svg>
+    )
+  },
+  {
+    to: '/tuto-facepack',
+    label: 'Tuto import Facepacks',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="9" cy="11" r="2" />
+        <path d="M21 16.5 16 12l-9.5 7" strokeLinejoin="round" />
       </svg>
     )
   }

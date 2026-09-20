@@ -13,18 +13,6 @@ const POLY_POSITION_COLORS = {
   stc: '#EF4444'
 };
 
-const FM26_POSITION_COLORS = {
-  gk: '#22C55E',
-  cb: '#3B82F6',
-  fb: '#0EA5E9',
-  wb: '#14B8A6',
-  cm: '#8e0cda',
-  am: '#F59E0B',
-  winger: '#F97316',
-  st: '#EF4444'
-};
-
-export function getPositionColor(profileKey, method) {
-  const table = method === 'fm26' ? FM26_POSITION_COLORS : POLY_POSITION_COLORS;
-  return table[profileKey] || '#3B82F6';
+export function getPositionColor(profileKey) {
+  return POLY_POSITION_COLORS[profileKey] || '#3B82F6';
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import './TutoStep.css';
 
 export default function TutoStep({ number, title, children }) {

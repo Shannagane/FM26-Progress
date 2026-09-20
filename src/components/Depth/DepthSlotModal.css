@@ -1,0 +1,180 @@
+.depth-slot-modal {
+  width: 100%;
+  max-width: 840px;
+  height: calc(100vh - 40px);
+  max-height: 640px;
+  margin: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.depth-slot-columns {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 18px;
+}
+
+.depth-slot-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.depth-slot-column-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.depth-slot-search {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 8px;
+}
+
+.depth-slot-active-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* --bg-elevated (cette liste) vaut la même chose que --surface (.group-modal) en thème
+     clair : sans une bordure plus marquée, la liste se fond dans la modale. */
+  border: 1px solid var(--row-divider);
+  border-radius: var(--radius-s);
+  background: var(--bg-elevated);
+  padding: 6px;
+}
+
+.depth-slot-active-empty {
+  padding: 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-s);
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+}
+
+.depth-slot-active-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-s);
+  /* --surface (cette ligne) vaut la même chose que --bg-elevated (.depth-slot-active-list) en
+     thème clair : sans une bordure, la ligne se fond dans la liste. */
+  border: 1px solid var(--row-divider);
+  background: var(--surface);
+}
+
+.depth-slot-rank {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-600);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.depth-slot-active-identity {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.depth-slot-active-name {
+  min-width: 0;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.depth-slot-player-meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.depth-slot-player-poste {
+  flex-shrink: 0;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: var(--bg-elevated);
+  /* --bg-elevated (ce badge) vaut la même chose que son fond environnant (--surface) en thème
+     clair : sans une bordure plus marquée, le badge se fond dans la ligne. */
+  border: 1px solid var(--row-divider);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.depth-slot-player-age {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.depth-slot-active-controls {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.depth-slot-active-controls button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--text-secondary);
+}
+.depth-slot-active-controls button svg { width: 15px; height: 15px; }
+.depth-slot-active-controls button:hover:not(:disabled) { background: var(--surface-hover); color: var(--text-primary); }
+.depth-slot-active-controls button:disabled { opacity: 0.3; cursor: default; }
+.depth-slot-active-remove:hover:not(:disabled) { color: var(--red) !important; }
+
+.depth-slot-sort-select {
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: var(--radius-s);
+  /* --bg-elevated (ce select) vaut la même chose que --surface (.group-modal) en thème
+     clair : sans une bordure plus marquée, le select se fond dans la modale. */
+  border: 1px solid var(--row-divider);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  max-width: 160px;
+}
+.depth-slot-sort-select:focus { border-color: var(--blue-400); }
+
+.depth-slot-player-disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.depth-slot-player-disabled:hover { background: none !important; }
+
+@media (max-width: 700px) {
+  .depth-slot-modal { height: calc(100vh - 20px); max-height: none; padding: 16px; margin: 10px; }
+  .depth-slot-columns { flex-direction: column; gap: 14px; }
+  .depth-slot-column { flex: 1 1 0; min-height: 160px; }
+  .group-modal-players-header { flex-direction: column; align-items: stretch; }
+  .depth-slot-sort-select { max-width: none; }
+  .depth-slot-active-item { flex-wrap: wrap; }
+  .depth-slot-player-meta { order: 1; flex-basis: 100%; padding-left: 30px; }
+}

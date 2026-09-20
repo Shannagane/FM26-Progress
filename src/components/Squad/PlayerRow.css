@@ -7,9 +7,14 @@
   background: var(--surface-hover);
 }
 
+/* Hauteur explicite (et non plus laissée au contenu le plus haut) pour que toutes les
+   cellules d'une ligne — avatar rond, badge de poste, texte simple, valeur d'attribut —
+   fassent exactement la même hauteur, quelle que soit la colonne. */
 .player-row td {
+  height: 56px;
+  text-align: center;
   padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--row-divider);
   font-size: 14px;
   color: var(--text-primary);
 }
@@ -17,9 +22,17 @@
 .cell-identity {
   display: flex;
   align-items: center;
+  width: 100%;
+  min-width: 0;
   gap: 12px;
   font-weight: 600;
   overflow: hidden;
+}
+
+.player-photo {
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .player-name {

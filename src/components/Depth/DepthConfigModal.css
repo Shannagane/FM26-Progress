@@ -10,6 +10,12 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   animation: depth-config-fade 0.15s ease;
+  transition: opacity 0.18s ease;
+}
+
+.depth-config-overlay-closing {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes depth-config-fade {
@@ -18,16 +24,16 @@
 }
 
 .depth-config-modal {
-  width: 100%;
-  max-width: 880px;
+  width: auto;
+  max-width: min(1440px, calc(100vw - 40px));
   max-height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  background: #14161C;
-  border: 1px solid #242832;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 20px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow);
   animation: depth-config-pop 0.18s ease;
 }
 
@@ -42,7 +48,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 22px 24px;
-  border-bottom: 1px solid #242832;
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -50,7 +56,7 @@
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.01em;
-  color: #FFFFFF;
+  color: var(--text-primary);
 }
 
 .depth-config-close {
@@ -58,9 +64,9 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid #242832;
+  border: 1px solid var(--border);
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,7 +74,7 @@
   transition: border-color 0.15s ease, color 0.15s ease;
 }
 .depth-config-close svg { width: 15px; height: 15px; }
-.depth-config-close:hover { border-color: #FF4D6D; color: #FF4D6D; }
+.depth-config-close:hover { border-color: var(--red); color: var(--red); }
 
 .depth-config-body {
   padding: 22px 24px;
@@ -83,13 +89,13 @@
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   margin-bottom: 12px;
 }
 
 .depth-config-empty-hint {
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 /* Bloc club */
@@ -100,26 +106,25 @@
 }
 
 .depth-config-club-card,
-.depth-config-formation-card,
-.depth-config-method-card {
+.depth-config-formation-card {
   position: relative;
   border-radius: 14px;
-  border: 1.5px solid #242832;
-  background: #0F1115;
+  /* --bg-elevated (cette carte) vaut la même chose que --surface (.depth-config-modal) en
+     thème clair : sans une bordure plus marquée, la carte se fond dans la modale. */
+  border: 1.5px solid var(--row-divider);
+  background: var(--bg-elevated);
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
   font-family: var(--font-body);
 }
 .depth-config-club-card:hover,
-.depth-config-formation-card:hover,
-.depth-config-method-card:hover {
-  border-color: rgba(0, 255, 135, 0.4);
+.depth-config-formation-card:hover {
+  border-color: color-mix(in srgb, var(--accent-glow) 40%, transparent);
 }
 .depth-config-club-card-active,
-.depth-config-formation-card-active,
-.depth-config-method-card-active {
-  border-color: #00FF87;
-  background: rgba(0, 255, 135, 0.1);
+.depth-config-formation-card-active {
+  border-color: var(--accent-glow);
+  background: color-mix(in srgb, var(--accent-glow) 10%, transparent);
 }
 
 .depth-config-check {
@@ -129,8 +134,8 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #00FF87;
-  color: #0F1115;
+  background: var(--accent-glow);
+  color: #FFFFFF;
   font-size: 11px;
   font-weight: 900;
   display: flex;
@@ -138,6 +143,7 @@
   justify-content: center;
   z-index: 1;
 }
+[data-theme='dark'] .depth-config-check { color: #0F1115; }
 
 .depth-config-club-card {
   display: flex;
@@ -152,7 +158,7 @@
   height: 40px;
   border-radius: 10px;
   object-fit: cover;
-  background: #1A1D24;
+  background: var(--surface);
 }
 .depth-config-club-logo-fallback {
   display: flex;
@@ -160,13 +166,13 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .depth-config-club-name {
   font-size: 12px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--text-primary);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -176,19 +182,23 @@
 
 /* Bloc formation */
 .depth-config-formation-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
 .depth-config-formation-card {
   display: flex;
+  width: 180px;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   padding: 12px;
 }
 
+/* Terrains schématiques (aperçu et éditeur "Créer sa propre tactique") : rendus volontairement
+   fixes (fond sombre/vert), comme le grand terrain — un terrain de foot garde ses couleurs
+   dans tous les cas, quel que soit le thème clair/sombre de l'application. */
 .depth-config-mini-pitch {
   position: relative;
   width: 100%;
@@ -224,40 +234,15 @@
 }
 
 .depth-config-formation-label {
+  margin: 0;
   font-size: 13px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--text-primary);
+  text-align: center;
 }
 .depth-config-formation-tag {
   font-size: 10.5px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* Bloc méthode */
-.depth-config-method-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.depth-config-method-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px;
-  text-align: left;
-}
-
-.depth-config-method-label {
-  font-size: 14px;
-  font-weight: 800;
-  color: #FFFFFF;
-  padding-right: 20px;
-}
-.depth-config-method-desc {
-  font-size: 12px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }
 
 /* Footer */
@@ -268,15 +253,15 @@
   justify-content: space-between;
   gap: 14px;
   padding: 16px 24px;
-  border-top: 1px solid #242832;
+  border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .depth-config-summary {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
   letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--text-secondary);
 }
 
 .depth-config-footer-actions {
@@ -286,8 +271,8 @@
 
 .depth-config-cancel {
   background: transparent;
-  border: 1px solid #242832;
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   font-weight: 700;
   font-size: 13px;
   padding: 11px 18px;
@@ -295,20 +280,21 @@
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
-.depth-config-cancel:hover { border-color: rgba(255, 255, 255, 0.3); color: #FFFFFF; }
+.depth-config-cancel:hover { border-color: var(--text-muted); color: var(--text-primary); }
 
 .depth-config-apply {
-  background: #00FF87;
-  color: #0F1115;
+  background: var(--accent-glow);
+  color: #FFFFFF;
   font-weight: 900;
   font-size: 13.5px;
   padding: 12px 22px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 135, 0.35);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-glow) 35%, transparent);
   transition: filter 0.15s ease, transform 0.15s ease;
 }
+[data-theme='dark'] .depth-config-apply { color: #0F1115; }
 .depth-config-apply:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .depth-config-apply:disabled {
   opacity: 0.4;
@@ -332,18 +318,20 @@
   gap: 12px;
   padding: 12px 40px 12px 14px;
   border-radius: 12px;
-  border: 1.5px solid #242832;
-  background: #0F1115;
-  color: #FFFFFF;
+  /* --bg-elevated (cette ligne) vaut la même chose que --surface (.depth-config-modal) en
+     thème clair : sans une bordure plus marquée, la ligne se fond dans la modale. */
+  border: 1.5px solid var(--row-divider);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
   cursor: pointer;
   text-align: left;
   font-family: var(--font-body);
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
-.depth-config-import-row:hover { border-color: rgba(0, 255, 135, 0.4); }
+.depth-config-import-row:hover { border-color: color-mix(in srgb, var(--accent-glow) 40%, transparent); }
 .depth-config-import-row-active {
-  border-color: #00FF87;
-  background: rgba(0, 255, 135, 0.1);
+  border-color: var(--accent-glow);
+  background: color-mix(in srgb, var(--accent-glow) 10%, transparent);
 }
 
 .depth-config-import-date {
@@ -354,7 +342,14 @@
 .depth-config-import-count {
   margin-left: auto;
   font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
+}
+
+@media (min-width: 2000px) {
+  .depth-config-modal { max-width: min(1700px, calc(100vw - 40px)); }
+  .depth-config-title { font-size: 25px; }
+  .depth-config-club-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .depth-config-formation-card { width: 200px; }
 }
 
 @media (max-width: 560px) {
@@ -363,4 +358,5 @@
   .depth-config-footer { flex-direction: column; align-items: stretch; }
   .depth-config-footer-actions { justify-content: stretch; }
   .depth-config-footer-actions button { flex: 1; }
+  .depth-config-formation-card { width: calc(50% - 6px); }
 }

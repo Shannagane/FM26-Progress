@@ -1,4 +1,3 @@
-import React from 'react';
 import { getNationFlagCode } from '../../data/nationFlags.js';
 import './NationFlag.css';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import './ProgressBubble.css';
 
 export default function ProgressBubble({ total, importCount }) {

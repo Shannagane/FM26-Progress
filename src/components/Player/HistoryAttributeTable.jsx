@@ -1,4 +1,3 @@
-import React from 'react';
 import { attributeColorClass } from '../../data/attributesConfig.js';
 import DeltaBadge from './DeltaBadge.jsx';
 import './AttributeTable.css';

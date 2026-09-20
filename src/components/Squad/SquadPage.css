@@ -2,16 +2,28 @@
   width: 100%;
 }
 
-.back-link {
-  display: inline-block;
+/* Même style bouton que .player-back-button (fiche joueur) : --blue-600 valant la même valeur
+   (#0E9D57) dans les deux thèmes, seul le survol est adapté par thème. */
+.squad-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13.5px;
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: #FFFFFF;
+  background: var(--blue-600);
+  padding: 9px 16px;
+  border-radius: var(--radius-s);
   margin-bottom: 18px;
-  font-weight: 500;
+  transition: background-color 0.15s ease;
 }
-.back-link:hover { color: var(--blue-400); }
+.squad-back-button:hover { background: var(--blue-500); }
 
 .squad-club-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
@@ -30,8 +42,32 @@
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
-.squad-club-btn svg { width: 15px; height: 15px; }
+.squad-club-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 .squad-club-btn:hover { border-color: var(--blue-400); color: var(--blue-400); }
+
+.squad-club-btn-label {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.squad-club-btn-logo {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--bg-elevated);
+}
+.squad-club-btn-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
 
 .squad-empty {
   padding: 60px 20px;
@@ -48,87 +84,11 @@
   margin-bottom: 28px;
 }
 
-.squad-category-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 6px 4px;
-  cursor: pointer;
-  text-align: left;
-  border-radius: var(--radius-s);
-}
-
-.squad-category-header:hover {
-  background: var(--surface-hover);
-}
-
-.squad-category-chevron {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  color: var(--text-secondary);
-  transition: transform 0.18s ease;
-}
-
-.squad-category-chevron-open {
-  transform: rotate(90deg);
-}
-
-.squad-category-title {
+.squad-table-title {
   font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
-}
-
-.squad-category-count {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 2px 10px;
-  border-radius: 20px;
-}
-
-.squad-custom-group-header {
-  padding-right: 4px;
-}
-
-.squad-custom-group-toggle {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-}
-
-.squad-custom-group-delete {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: none;
-  background: none;
-  color: var(--text-secondary);
-  border-radius: var(--radius-s);
-}
-.squad-custom-group-delete svg { width: 14px; height: 14px; }
-.squad-custom-group-delete:hover {
-  color: var(--red);
-  background: color-mix(in srgb, var(--red) 12%, transparent);
+  margin-bottom: 10px;
 }
 
 @media (min-width: 1900px) {

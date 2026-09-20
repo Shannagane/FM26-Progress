@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { comparePositions } from '../../data/positionOrder.js';

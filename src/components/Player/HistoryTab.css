@@ -127,7 +127,9 @@
   padding: 5px 10px;
   border-radius: 20px;
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  /* --bg-elevated (ce chip) vaut la même chose que --surface (.history-entry) en thème
+     clair : sans une bordure plus marquée, le chip se fond dans la carte. */
+  border: 1px solid var(--row-divider);
   color: var(--text-primary);
 }
 

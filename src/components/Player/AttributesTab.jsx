@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { getAttributeColumns, ATTR_BY_KEY } from '../../data/attributesConfig.js';
 import { isGoalkeeper } from '../../data/positionOrder.js';
 import { getAttributeHistory } from '../../utils/storage.js';

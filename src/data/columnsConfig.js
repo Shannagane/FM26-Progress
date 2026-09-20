@@ -9,7 +9,7 @@ import {
 import { parseNumericValue } from '../utils/text.js';
 import { parseTransferValue, formatTransferValue } from '../utils/transferValue.js';
 
-const CORE_IDENTITY_KEYS = new Set(['nom', 'poste', 'club', 'photo']);
+const CORE_IDENTITY_KEYS = new Set(['nom', 'poste', 'club', 'photo', 'uid']);
 
 const NUMERIC_IDENTITY_KEYS = new Set([
   'numero', 'age', 'matchs_joues', 'passes_decisives', 'buts', 'xg',
@@ -71,4 +71,4 @@ export const COLUMN_GROUPS = [
 ];
 
 // Tableau par défaut = ce que l'application affichait avant que les colonnes soient personnalisables.
-export const DEFAULT_COLUMN_KEYS = ['age', 'matchs_joues', 'buts', 'passes_decisives', 'note_moyenne'];
+export const DEFAULT_COLUMN_KEYS = ['position', 'age', 'matchs_joues', 'buts', 'passes_decisives', 'note_moyenne'];

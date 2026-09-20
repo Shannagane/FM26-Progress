@@ -5,7 +5,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
   z-index: 1000;
   animation: group-modal-fade 0.15s ease;
 }
@@ -15,16 +14,32 @@
   to { opacity: 1; }
 }
 
+/* Base commune aux deux modales. .edit-columns-modal (beaucoup de contenu : liste de
+   colonnes + picker) reste plein écran ; .create-group-modal (juste une liste de noms à
+   cocher) redevient une carte classique, dimensionnée à son contenu. */
 .group-modal {
-  width: 100%;
-  max-width: 460px;
-  max-height: calc(100vh - 40px);
   display: flex;
   flex-direction: column;
+  background: var(--surface);
+}
+
+.edit-columns-modal {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  padding: 28px clamp(20px, 5vw, 64px);
+  box-shadow: none;
+}
+
+.create-group-modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - 40px);
+  margin: 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   padding: 22px;
-  background: var(--surface);
   box-shadow: var(--shadow);
 }
 
@@ -127,7 +142,9 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-bottom: 1px solid var(--border);
+  /* --border seul est presque invisible ici : --bg-elevated (cette liste) et --surface (la
+     modale) valent toutes les deux #FFFFFF en thème clair, comme pour le tableau Effectif. */
+  border-bottom: 1px solid var(--row-divider);
   cursor: pointer;
 }
 .group-modal-player:last-child { border-bottom: none; }
@@ -141,8 +158,18 @@
   accent-color: var(--blue-500);
 }
 
-.group-modal-player-name {
+/* Nom + icône "i" collés ensemble (comme dans le tableau Effectif) : c'est ce conteneur qui
+   prend l'espace disponible, pas le nom seul, sinon l'icône se retrouve poussée loin du texte. */
+.group-modal-player-identity {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+}
+
+.group-modal-player-name {
   min-width: 0;
   font-size: 13.5px;
   color: var(--text-primary);
@@ -151,15 +178,9 @@
   text-overflow: ellipsis;
 }
 
-.group-modal-player-poste {
-  flex-shrink: 0;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
 .group-modal-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 18px;
@@ -191,7 +212,10 @@
 .group-modal-confirm:disabled { opacity: 0.5; cursor: default; }
 
 @media (max-width: 560px) {
-  .group-modal { padding: 16px; }
+  .create-group-modal { padding: 16px; margin: 10px; }
+  .edit-columns-modal { padding: 16px; }
   .group-modal-players-header { flex-direction: column; align-items: stretch; }
   .group-modal-search { max-width: none; }
+  .group-modal-actions { flex-direction: column-reverse; align-items: stretch; }
+  .group-modal-actions button { width: 100%; }
 }

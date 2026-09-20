@@ -159,6 +159,7 @@
 .newgens-modal-confirm:hover { background: var(--blue-500); }
 .newgens-modal-confirm:disabled { opacity: 0.5; cursor: default; }
 
+.newgens-club-select,
 .newgens-import-select {
   display: flex;
   flex-direction: column;
@@ -166,9 +167,10 @@
   font-size: 13px;
   color: var(--text-secondary);
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 14px;
 }
 
+.newgens-club-select select,
 .newgens-import-select select {
   font-family: var(--font-body);
   font-size: 14px;
@@ -179,6 +181,7 @@
   color: var(--text-primary);
   width: 100%;
 }
+.newgens-club-select select:focus,
 .newgens-import-select select:focus { border-color: var(--blue-400); }
 
 .newgens-method-select {
@@ -337,7 +340,9 @@
   color: var(--text-secondary);
   font-weight: 600;
   padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+  /* --border seul est presque invisible ici : --surface (le wrap) et --bg-elevated (l'en-tête)
+     valent toutes les deux #FFFFFF en thème clair, comme pour le tableau Effectif. */
+  border-bottom: 1px solid var(--row-divider);
   background: var(--bg-elevated);
   position: sticky;
   top: 0;
@@ -349,7 +354,7 @@
 
 .newgens-table tbody td {
   padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--row-divider);
   font-size: 13.5px;
   color: var(--text-primary);
 }

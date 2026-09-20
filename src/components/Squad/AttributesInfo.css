@@ -28,7 +28,7 @@
 
 .attr-info-tooltip {
   position: fixed;
-  z-index: 200;
+  z-index: 1100;
   width: 520px;
   max-width: calc(100vw - 24px);
   max-height: calc(100vh - 24px);

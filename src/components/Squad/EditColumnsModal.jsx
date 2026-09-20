@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ALL_COLUMNS, COLUMN_BY_KEY, COLUMN_GROUPS, DEFAULT_COLUMN_KEYS } from '../../data/columnsConfig.js';
 import { normalize } from '../../utils/text.js';
 import './EditColumnsModal.css';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import JerseyNumberBadge from './JerseyNumberBadge.jsx';
 import './PlayerAvatar.css';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './ViewDownloadCard.css';
 
 // Doit correspondre au nom réel du fichier dans public/.

@@ -18,8 +18,10 @@
   padding: 10px 16px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 10px;
-  min-width: 130px;
+  min-width: 85px;
   flex: 1;
 }
 
@@ -28,8 +30,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 36px;
+  height: 36px;
   color: var(--blue-400);
 }
 .info-icon svg {

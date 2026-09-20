@@ -104,16 +104,10 @@ export function describeFootPreference(player, invertSide = false) {
   };
 }
 
-// Postes "larges" pour lesquels la vérification de pied s'applique, par méthode
-// (Latéral Offensif / Latéral / Ailier pour la méthode polynomiale, équivalents FM26).
-export const FOOT_CHECK_POSITION_KEYS = {
-  polynomial: ['dlr', 'wblr', 'amlr'],
-  fm26: ['fb', 'wb', 'winger']
-};
+// Postes "larges" pour lesquels la vérification de pied s'applique (Latéral Offensif /
+// Latéral / Ailier).
+export const FOOT_CHECK_POSITION_KEYS = ['dlr', 'wblr', 'amlr'];
 
-// Poste "Ailier" (extérieur) de chaque méthode : celui pour lequel on affiche aussi la
-// variante "Ailier Intérieur" (logique de pied inversée).
-export const WINGER_POSITION_KEY = {
-  polynomial: 'amlr',
-  fm26: 'winger'
-};
+// Poste "Ailier" (extérieur) : celui pour lequel on affiche aussi la variante "Ailier
+// Intérieur" (logique de pied inversée).
+export const WINGER_POSITION_KEY = 'amlr';

@@ -1,4 +1,5 @@
 import { normalize } from '../utils/text.js';
+import flagCountries from 'flag-icons/country.json';
 
 // Clé de recherche tolérante : comme normalize(), mais on remplace en plus les
 // apostrophes/tirets par des espaces pour absorber les variantes d'écriture du
@@ -175,6 +176,38 @@ const NATION_CODES = {
   'nouvelle zelande': 'NZ'
 };
 
+// Table de secours générée automatiquement, utilisée quand une nation ne correspond à aucune
+// entrée des tables manuelles ci-dessus : la table manuelle ne couvre qu'une sélection de pays
+// et une seule graphie française par pays, donc une nation orthographiée autrement (ou un CSV
+// FM26 exporté avec le jeu en anglais) tombait silencieusement à plat (aucun drapeau affiché).
+// - Les noms anglais viennent directement de flag-icons (country.json), qui liste tous les
+//   drapeaux que la librairie sait afficher, y compris les entrées spéciales (gb-eng, etc.).
+// - Les noms français sont générés via Intl.DisplayNames pour les codes ISO standards.
+// Les tables manuelles ci-dessus restent prioritaires (elles couvrent les graphies FR
+// courantes et quelques nations qui n'ont pas de code ISO officiel, ex. Kosovo).
+function buildGeneratedCodes() {
+  const map = {};
+  flagCountries.forEach(c => {
+    const key = nationKey(c.name);
+    if (key && !map[key]) map[key] = c.code;
+  });
+  if (typeof Intl !== 'undefined' && Intl.DisplayNames) {
+    try {
+      const frNames = new Intl.DisplayNames(['fr'], { type: 'region' });
+      flagCountries.forEach(c => {
+        if (!c.iso) return;
+        const key = nationKey(frNames.of(c.code.toUpperCase()));
+        if (key && !map[key]) map[key] = c.code;
+      });
+    } catch {
+      // Intl.DisplayNames indisponible sur ce runtime : les noms anglais suffisent déjà.
+    }
+  }
+  return map;
+}
+
+const GENERATED_CODES = buildGeneratedCodes();
+
 // Renvoie le code drapeau (librairie flag-icons, ex: "fr", "gb-eng") pour une
 // nation, ou null si inconnue/non reconnue, à partir du texte tel qu'exporté
 // par le CSV FM26.
@@ -187,6 +220,6 @@ export function getNationFlagCode(nation) {
   const key = nationKey(nation);
   if (!key) return null;
   if (SPECIAL_CODES[key]) return SPECIAL_CODES[key];
-  const code = NATION_CODES[key];
-  return code ? code.toLowerCase() : null;
+  if (NATION_CODES[key]) return NATION_CODES[key].toLowerCase();
+  return GENERATED_CODES[key] || null;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getPlayerSnapshots } from '../../utils/storage.js';
 import { getAttributeColumns } from '../../data/attributesConfig.js';
 import { isGoalkeeper } from '../../data/positionOrder.js';
@@ -98,7 +98,7 @@ export default function HistoryTab({ player, snapshots }) {
                   <span className="history-stat-label">{s.label}</span>
                   <span className="history-stat-value">
                     {(s.value !== undefined && s.value !== null && s.value !== '') ? s.value : '–'}
-                    {s.delta ? <DeltaBadge delta={s.delta} /> : null}
+                    <DeltaBadge delta={s.delta} />
                   </span>
                 </span>
               ))}

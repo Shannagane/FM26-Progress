@@ -1,4 +1,3 @@
-import React from 'react';
 import './Sparkline.css';
 
 // Petite flèche inline indiquant si un attribut a globalement progressé ou régressé sur

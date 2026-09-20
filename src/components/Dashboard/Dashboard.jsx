@@ -1,4 +1,3 @@
-import React from 'react';
 import CsvImporter from './CsvImporter.jsx';
 import ImportHistory from './ImportHistory.jsx';
 import TopProgressions from './TopProgressions.jsx';

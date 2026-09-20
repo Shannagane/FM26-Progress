@@ -1,4 +1,3 @@
-import React from 'react';
 import { attributeColorClass } from '../../data/attributesConfig.js';
 import { attributeTierClass } from '../../data/attributeHighlights.js';
 import { getAttributeDelta, getAttributeHistory } from '../../utils/storage.js';

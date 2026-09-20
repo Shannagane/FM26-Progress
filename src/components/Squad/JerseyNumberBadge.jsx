@@ -1,4 +1,3 @@
-import React from 'react';
 import { getPositionColor } from '../../data/positionOrder.js';
 import './JerseyNumberBadge.css';
 

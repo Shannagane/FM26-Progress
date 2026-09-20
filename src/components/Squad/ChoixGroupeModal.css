@@ -1,0 +1,42 @@
+/* Ligne de groupe composite : un bouton de sélection (reprend l'espace de .clubmodal-item)
+   + un bouton de suppression séparé — .clubmodal-item ne peut plus être un <button> unique
+   ici puisqu'elle contient elle-même deux boutons. */
+.clubmodal-item.choixgroupe-item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.choixgroupe-item-select {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.choixgroupe-item-delete {
+  flex-shrink: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.choixgroupe-item-delete svg { width: 14px; height: 14px; }
+.choixgroupe-item-delete:hover {
+  color: var(--red);
+  background: color-mix(in srgb, var(--red) 10%, transparent);
+}

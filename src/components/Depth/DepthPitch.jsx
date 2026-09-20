@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { EXACT_POSITION_LABELS, FORMATIONS } from '../../data/formations.js';
+import { EXACT_POSITION_LABELS } from '../../data/formations.js';
 import { formatTransferValue } from '../../utils/transferValue.js';
-import { scoreTier } from '../../data/newgensPositionProfiles.js';
 import './DepthPitch.css';
 
 function shortName(nom) {
@@ -18,14 +17,10 @@ function initialsOf(nom) {
   return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
 }
 
-function scoreStars(percent) {
-  return Math.max(0, Math.min(5, Math.round((percent / 100) * 5)));
-}
-
 function Tooltip({ hovered }) {
   if (!hovered) return null;
   const { entry, code, coords } = hovered;
-  const { player, percent, scoreLabel } = entry;
+  const { player } = entry;
   return createPortal(
     <div className="pitch-tooltip" style={{ top: coords.top, left: coords.left }}>
       <div className="pitch-tooltip-name">{player.nom} • {player.age || '–'} ans</div>
@@ -36,22 +31,18 @@ function Tooltip({ hovered }) {
       <div className="pitch-tooltip-line">
         Note moy. : {player.note_moyenne || '–'} • {player.matchs_joues || '0'} matchs
       </div>
-      <div className={`pitch-tooltip-score pitch-text-${scoreTier(percent, 100)}`}>
-        Score au poste : {scoreLabel}
-      </div>
     </div>,
     document.body
   );
 }
 
 function BenchAvatar({ entry, code, offset, onSelect, onHover, onLeave }) {
-  const tier = scoreTier(entry.percent, 100);
   return (
     <button
       type="button"
-      className={`pitch-avatar pitch-avatar-bench pitch-avatar-${tier}`}
+      className="pitch-avatar pitch-avatar-bench"
       style={{ '--offset': offset }}
-      onClick={e => { e.stopPropagation(); onSelect(entry); }}
+      onClick={e => { e.stopPropagation(); onSelect(); }}
       onMouseEnter={e => onHover(entry, code, e.currentTarget)}
       onMouseLeave={onLeave}
     >
@@ -70,8 +61,10 @@ function PitchSlot({ slot, isLocked, onSelectSlot }) {
   }
   const clearHover = () => setHover(null);
 
-  const mainTier = main ? scoreTier(main.percent, 100) : null;
-  const stars = main ? scoreStars(main.percent) : 0;
+  function openSlot(e) {
+    e.stopPropagation();
+    onSelectSlot(slot);
+  }
 
   return (
     <div
@@ -85,7 +78,7 @@ function PitchSlot({ slot, isLocked, onSelectSlot }) {
             entry={entry}
             code={code}
             offset={i + 1}
-            onSelect={e => onSelectSlot(slot, e)}
+            onSelect={() => onSelectSlot(slot)}
             onHover={handleHover}
             onLeave={clearHover}
           />
@@ -93,19 +86,15 @@ function PitchSlot({ slot, isLocked, onSelectSlot }) {
         {main ? (
           <button
             type="button"
-            className={`pitch-avatar pitch-avatar-main pitch-avatar-${mainTier}`}
-            onClick={e => { e.stopPropagation(); onSelectSlot(slot, main); }}
+            className="pitch-avatar pitch-avatar-main"
+            onClick={openSlot}
             onMouseEnter={e => handleHover(main, code, e.currentTarget)}
             onMouseLeave={clearHover}
           >
             {initialsOf(main.player.nom)}
           </button>
         ) : (
-          <button
-            type="button"
-            className="pitch-avatar pitch-avatar-empty"
-            onClick={e => { e.stopPropagation(); onSelectSlot(slot, null); }}
-          >
+          <button type="button" className="pitch-avatar pitch-avatar-empty" onClick={openSlot}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M12 8v8M8 12h8" />
             </svg>
@@ -114,15 +103,10 @@ function PitchSlot({ slot, isLocked, onSelectSlot }) {
       </div>
 
       {main ? (
-        <>
-          <span className={`pitch-stars pitch-text-${mainTier}`}>
-            {'★'.repeat(stars)}{'☆'.repeat(5 - stars)}
-          </span>
-          <span className="pitch-badge">
-            <span className={`pitch-badge-code pitch-bg-${mainTier}`}>{code}</span>
-            <span className="pitch-badge-name">{shortName(main.player.nom)}</span>
-          </span>
-        </>
+        <span className="pitch-badge">
+          <span className={`pitch-badge-code pitch-bg-${status.tier}`}>{code}</span>
+          <span className="pitch-badge-name">{shortName(main.player.nom)}</span>
+        </span>
       ) : (
         <span className="pitch-badge pitch-badge-empty">
           <span className="pitch-badge-code pitch-bg-red">{code}</span>
@@ -147,21 +131,8 @@ function clampTooltip(rect) {
 }
 
 export default function DepthPitch({ formation, slots, lockedSlotId, onSelectSlot, onClear }) {
-  const isDefaultFormation = formation && FORMATIONS[0].key === formation.key;
-  const title = formation
-    ? `XI Type — ${formation.label} ${formation.tag || ''}${isDefaultFormation ? ' (par défaut)' : ''}`
-    : 'XI Type';
-
   return (
     <div className="pitch-wrap">
-      <div className="pitch-topbar">
-        <span className="pitch-topbar-title">{title.toUpperCase()}</span>
-        <span className="pitch-topbar-live">
-          <span className="pitch-live-dot" />
-          LIVE
-        </span>
-      </div>
-
       <div className="pitch-field" onClick={onClear}>
         <div className="pitch-lines">
           <div className="pitch-border" />

@@ -1,14 +1,8 @@
 .top-progressions-columns {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
   margin-bottom: 22px;
-}
-
-@media (min-width: 900px) {
-  .top-progressions-columns {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
 }
 
 .top-progressions {
@@ -19,14 +13,21 @@
 .top-progressions-title {
   font-size: 15px;
   font-weight: 700;
+  text-align: center;
   color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 16px 18px;
   margin-bottom: 12px;
 }
 
 .top-progressions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
   min-width: 0;
 }
 
@@ -35,6 +36,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   padding: 16px 18px;
+  flex: 0 0 280px;
   min-width: 0;
 }
 
@@ -91,7 +93,9 @@
   font-weight: 600;
   color: var(--text-secondary);
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  /* --bg-elevated (ce badge) vaut la même chose que --surface (.top-progressions-card) en
+     thème clair : sans une bordure plus marquée, le badge se fond dans la carte. */
+  border: 1px solid var(--row-divider);
   border-radius: 20px;
   padding: 2px 9px;
 }
@@ -110,5 +114,5 @@
 .top-progressions-value-neutral { color: var(--text-secondary); }
 
 @media (max-width: 420px) {
-  .top-progressions-grid { grid-template-columns: minmax(0, 1fr); }
+  .top-progressions-card { flex-basis: 240px; }
 }

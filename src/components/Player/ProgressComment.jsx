@@ -1,4 +1,3 @@
-import React from 'react';
 import './ProgressComment.css';
 
 export default function ProgressComment({ segments }) {

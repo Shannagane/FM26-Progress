@@ -9,9 +9,17 @@
   color: #FFFFFF;
 }
 
-.jersey-badge-green { background: #16A34A; }
+.jersey-badge-green { background: var(--green); }
 .jersey-badge-blue { background: var(--violet); }
-.jersey-badge-orange { background: #D97706; }
-.jersey-badge-teal { background: #0D9488; }
+.jersey-badge-orange { background: var(--orange); }
+.jersey-badge-teal { background: var(--teal); }
 .jersey-badge-red { background: var(--red); }
 .jersey-badge-neutral { background: var(--grey-mid); }
+
+/* En thème sombre, vert/orange/teal sont des néons clairs : texte foncé pour rester lisible
+   (même logique que sur le terrain interactif, cf. DepthPitch.css). */
+[data-theme='dark'] .jersey-badge-green,
+[data-theme='dark'] .jersey-badge-orange,
+[data-theme='dark'] .jersey-badge-teal {
+  color: #0F1115;
+}

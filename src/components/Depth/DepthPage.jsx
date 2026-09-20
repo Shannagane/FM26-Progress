@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
-import { FORMATIONS, EXACT_POSITION_LABELS, EXACT_CODE_TO_GROUP } from '../../data/formations.js';
-import { buildPitchDepth } from '../../utils/pitchDepth.js';
-import { getMethodProfiles, scoreTier, NEWGENS_METHODS } from '../../data/newgensPositionProfiles.js';
-import { ATTR_BY_KEY, attributeColorClass } from '../../data/attributesConfig.js';
-import { formatTransferValue } from '../../utils/transferValue.js';
+import { FORMATIONS, EXACT_POSITION_LABELS } from '../../data/formations.js';
+import { isGoalkeeper } from '../../data/positionOrder.js';
+import { loadFormationAssignments, saveSlotAssignment, MAX_PLAYERS_PER_SLOT } from '../../utils/depthAssignments.js';
+import { loadClubFormation, saveClubFormation } from '../../utils/depthFormationPrefs.js';
+import { loadLastDepthView, saveLastDepthView } from '../../utils/depthViewPrefs.js';
+import { loadClubLogos } from '../../utils/clubLogos.js';
 import AttributesInfo from '../Squad/AttributesInfo.jsx';
+import PlayerAvatar from '../Squad/PlayerAvatar.jsx';
 import DepthPitch from './DepthPitch.jsx';
 import DepthFormationModal from './DepthFormationModal.jsx';
 import DepthClubModal from './DepthClubModal.jsx';
-import DepthMethodModal from './DepthMethodModal.jsx';
+import DepthSlotModal from './DepthSlotModal.jsx';
 import './DepthPage.css';
 
 const STATUS_LEGEND = [
@@ -20,83 +22,96 @@ const STATUS_LEGEND = [
   { tier: 'red', label: 'Critique' }
 ];
 
+// Statut de profondeur d'un poste : purement basé sur le nombre de joueurs qu'on y a
+// placés soi-même (aucun calcul automatique) — un poste sans doublure (0 ou 1 joueur) est
+// toujours à surveiller, au-delà plus il y a de joueurs placés, plus la rotation est solide.
+function depthStatusFromCount(count) {
+  if (count >= 3) return { tier: 'green', label: 'Excellent' };
+  if (count === 2) return { tier: 'violet', label: 'Bon' };
+  if (count === 1) return { tier: 'orange', label: 'Faible' };
+  return { tier: 'red', label: 'Critique' };
+}
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return iso;
+  }
+}
+
+function clubInitials(name) {
+  return (name || '').trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase() || '?';
+}
+
 function insightSentence(status, code) {
   const label = EXACT_POSITION_LABELS[code].toLowerCase();
   switch (status.tier) {
-    case 'green': return `Poste bien couvert : plusieurs options fiables à ${label}.`;
+    case 'green': return `Poste bien couvert : plusieurs options disponibles à ${label}.`;
     case 'violet': return `Rotation viable à ${label}, sans profondeur excédentaire.`;
-    case 'orange': return `Doublure fragile à ${label} : poste à surveiller.`;
-    default: return `Aucune solution fiable à ${label} : renfort recommandé.`;
+    case 'orange': return `Doublure fragile à ${label} : pense à placer un joueur de plus.`;
+    default: return `Aucun joueur placé à ${label} : clique le poste pour en ajouter.`;
   }
 }
 
-function initials(nom) {
-  return (nom || '').trim().split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase() || '?';
+function EditIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  );
 }
 
-function DepthDetailPanel({ slot, entry, profileByKey, method, onSelectEntry }) {
-  if (!entry) {
-    return (
-      <div className="depth-panel-empty">
-        <div className="depth-panel-empty-title">Poste vide — {EXACT_POSITION_LABELS[slot.code]}</div>
-        <p>Aucun joueur de l'effectif ne couvre ce poste actuellement.</p>
-      </div>
-    );
-  }
-
-  const { player, percent, scoreLabel } = entry;
-  const groupKey = EXACT_CODE_TO_GROUP[method]?.[slot.code];
-  const profile = groupKey ? profileByKey[groupKey] : null;
-  const topAttrs = profile
-    ? Object.entries(profile.weights || profile.coefficients).sort((a, b) => b[1] - a[1]).slice(0, 4)
-    : [];
-  const tier = scoreTier(percent, 100);
+// `key={slot.id}` côté appelant réinitialise ce composant (donc la prévisualisation) à
+// chaque changement de poste sélectionné sur le terrain.
+function DepthDetailPanel({ slot, onEdit }) {
+  const label = EXACT_POSITION_LABELS[slot.code];
+  const [previewId, setPreviewId] = useState(slot.main?.player?.id || null);
+  // Le joueur affiché en haut du panneau : celui qu'on vient de cliquer dans la liste
+  // "Profondeur" ci-dessous, ou le titulaire par défaut.
+  const previewed = slot.ranked.find(e => e.player.id === previewId)?.player || slot.main?.player || null;
 
   return (
     <div className="depth-panel-content">
       <div className="depth-panel-header">
-        <span className={`depth-panel-avatar depth-bg-${tier}`}>{initials(player.nom)}</span>
-        <div className="depth-panel-heading">
-          <div className="depth-panel-name-row">
-            <span className="depth-panel-name">{player.nom}</span>
-            <AttributesInfo player={player} />
-          </div>
-          <div className="depth-panel-meta">
-            {slot.code} • {EXACT_POSITION_LABELS[slot.code]} • {player.age || '–'} ans
-          </div>
-        </div>
-        <span className={`depth-panel-score depth-text-${tier}`}>{scoreLabel}</span>
-      </div>
-
-      <div className="depth-panel-stats">
-        <div>
-          <span className="depth-panel-stat-label">Valeur</span>
-          <span className="depth-panel-stat-value">{player.valeur_transfert ? formatTransferValue(player.valeur_transfert) : '–'}</span>
-        </div>
-        <div>
-          <span className="depth-panel-stat-label">Note moy.</span>
-          <span className="depth-panel-stat-value">{player.note_moyenne || '–'}</span>
-        </div>
-        <div>
-          <span className="depth-panel-stat-label">Matchs</span>
-          <span className="depth-panel-stat-value">{player.matchs_joues || '0'}</span>
-        </div>
-      </div>
-
-      {topAttrs.length > 0 && (
-        <div className="depth-panel-attrs">
-          <div className="depth-panel-attrs-title">Attributs clés du poste</div>
-          {topAttrs.map(([key]) => {
-            const def = ATTR_BY_KEY[key];
-            if (!def) return null;
-            const value = player.attributes?.[key];
-            return (
-              <div className="depth-panel-attr-row" key={key}>
-                <span className="depth-panel-attr-label">{def.label}</span>
-                <span className={`depth-panel-attr-value ${attributeColorClass(value)}`}>{value ?? '–'}</span>
+        {previewed ? (
+          <>
+            <PlayerAvatar nom={previewed.nom} photo={previewed.photo} numero={previewed.numero} poste={previewed.poste} size={48} />
+            <div className="depth-panel-heading">
+              <div className="depth-panel-name-row">
+                <span className="depth-panel-name">{previewed.nom}</span>
+                <AttributesInfo player={previewed} />
               </div>
-            );
-          })}
+              <div className="depth-panel-meta">{previewed.age || '–'} ans • {label}</div>
+            </div>
+          </>
+        ) : (
+          <div className="depth-panel-heading">
+            <div className="depth-panel-name-row">
+              <span className="depth-panel-name">Poste vide</span>
+            </div>
+            <div className="depth-panel-meta">{label}</div>
+          </div>
+        )}
+        <button type="button" className="depth-panel-edit-btn" onClick={onEdit}>
+          <EditIcon /> Modifier
+        </button>
+      </div>
+
+      {previewed && (
+        <div className="depth-panel-stats">
+          <div>
+            <span className="depth-panel-stat-label">Note moy.</span>
+            <span className="depth-panel-stat-value">{previewed.note_moyenne || '–'}</span>
+          </div>
+          <div>
+            <span className="depth-panel-stat-label">Matchs joués</span>
+            <span className="depth-panel-stat-value">{previewed.matchs_joues || '0'}</span>
+          </div>
+          <div>
+            <span className="depth-panel-stat-label">Temps de jeu</span>
+            <span className="depth-panel-stat-value">{previewed.temps_de_jeu || '–'}</span>
+          </div>
         </div>
       )}
 
@@ -106,37 +121,34 @@ function DepthDetailPanel({ slot, entry, profileByKey, method, onSelectEntry }) 
 
       <div className="depth-panel-pool">
         <div className="depth-panel-pool-title">
-          Profondeur — {EXACT_POSITION_LABELS[slot.code]} ({slot.ranked.length})
+          Profondeur — {label} ({slot.ranked.length}/{MAX_PLAYERS_PER_SLOT})
         </div>
         {slot.ranked.length === 0 ? (
-          <p className="depth-panel-pool-empty">Aucun joueur disponible pour ce poste.</p>
+          <p className="depth-panel-pool-empty">Aucun joueur placé pour ce poste.</p>
         ) : (
-          <ul className="depth-panel-pool-list">
-            {slot.ranked.map((e, i) => (
-              <li key={e.player.id}>
+          <ol className="depth-panel-pool-list">
+            {slot.ranked.map((entry, i) => (
+              <li key={entry.player.id}>
                 <button
                   type="button"
-                  className={`depth-panel-pool-row ${e.player.id === entry.player.id ? 'depth-panel-pool-row-active' : ''}`}
-                  onClick={() => onSelectEntry(e)}
+                  className={`depth-panel-pool-row ${entry.player.id === previewed?.id ? 'depth-panel-pool-row-active' : ''}`}
+                  onClick={() => setPreviewId(entry.player.id)}
                 >
-                  <span className="depth-panel-pool-rank">{i + 1}</span>
-                  <span className="depth-panel-pool-name">{e.player.nom}</span>
-                  <span className={`depth-panel-pool-score depth-text-${scoreTier(e.percent, 100)}`}>{e.scoreLabel}</span>
+                  <span className="depth-panel-pool-rank">{i + 1}-</span>
+                  <span className="depth-panel-pool-name">{entry.player.nom}</span>
                 </button>
               </li>
             ))}
-          </ul>
+          </ol>
         )}
       </div>
-
-      <Link to={`/joueur/${player.id}`} className="depth-panel-link">Voir la fiche complète →</Link>
     </div>
   );
 }
 
 export default function DepthPage() {
   const { snapshots } = useAppData();
-  const [formationKey, setFormationKey] = useState(FORMATIONS[0].key);
+  const clubLogos = useMemo(() => loadClubLogos(), []);
 
   const clubs = useMemo(() => {
     const set = new Set(snapshots.map(s => (s.csvName || '').trim()).filter(Boolean));
@@ -156,24 +168,35 @@ export default function DepthPage() {
     return map;
   }, [snapshots]);
 
-  const [selectedClub, setSelectedClub] = useState(() => clubs[0] || null);
-  const [selectedSnapshotId, setSelectedSnapshotId] = useState(() => {
-    const first = clubs[0] && importsByClub.get(clubs[0]);
-    return first?.[0]?.id || null;
+  // Reprend le club et l'import consultés en dernier (voir depthViewPrefs.js) s'ils existent
+  // toujours dans les imports disponibles, sinon retombe sur le premier club par défaut.
+  const lastView = useMemo(() => loadLastDepthView(), []);
+  const [selectedClub, setSelectedClub] = useState(() => {
+    if (lastView?.club && clubs.includes(lastView.club)) return lastView.club;
+    return clubs[0] || null;
   });
-  const [method, setMethod] = useState('fm26');
+  const [selectedSnapshotId, setSelectedSnapshotId] = useState(() => {
+    const club = (lastView?.club && clubs.includes(lastView.club)) ? lastView.club : clubs[0];
+    const imports = club && importsByClub.get(club);
+    if (lastView?.snapshotId && imports?.some(s => s.id === lastView.snapshotId)) return lastView.snapshotId;
+    return imports?.[0]?.id || null;
+  });
+  // La formation choisie est mémorisée par club (voir applyFormationModal), et rechargée
+  // dès qu'on revient sur la page ou qu'on change de club — plus besoin de la resélectionner.
+  const [formationKey, setFormationKey] = useState(() => loadClubFormation(selectedClub, FORMATIONS[0].key));
   const [locked, setLocked] = useState(null);
+  const [editingSlotId, setEditingSlotId] = useState(null);
 
   const [formationModalOpen, setFormationModalOpen] = useState(false);
-  const [formationSnapshot, setFormationSnapshot] = useState(null);
   const [clubModalOpen, setClubModalOpen] = useState(false);
-  const [clubSnapshot, setClubSnapshot] = useState(null);
-  const [methodModalOpen, setMethodModalOpen] = useState(false);
-  const [methodSnapshot, setMethodSnapshot] = useState(null);
 
   const formation = FORMATIONS.find(f => f.key === formationKey) || FORMATIONS[0];
-  const methodLabel = NEWGENS_METHODS.find(m => m.key === method)?.label || method;
-  const summary = `${selectedClub || 'Aucun club'} • ${formation.label} • ${methodLabel}`;
+  // Tant qu'aucune formation n'a jamais été choisie pour ce club, le bouton affiche le libellé
+  // générique "Formation" plutôt que le schéma par défaut (le terrain, lui, l'utilise déjà).
+  const hasChosenFormation = useMemo(
+    () => loadClubFormation(selectedClub, null) !== null,
+    [selectedClub, formationKey]
+  );
 
   const selectedSnapshot = useMemo(
     () => snapshots.find(s => s.id === selectedSnapshotId) || null,
@@ -185,90 +208,101 @@ export default function DepthPage() {
     [selectedSnapshot]
   );
 
-  const profileByKey = useMemo(
-    () => Object.fromEntries(getMethodProfiles(method).map(p => [p.key, p])),
-    [method]
+  const scopedPlayersById = useMemo(
+    () => new Map(scopedPlayers.map(p => [p.id, p])),
+    [scopedPlayers]
   );
 
-  const slots = useMemo(
-    () => buildPitchDepth(scopedPlayers, formation, method),
-    [scopedPlayers, formation, method]
-  );
+  useEffect(() => {
+    setFormationKey(loadClubFormation(selectedClub, FORMATIONS[0].key));
+  }, [selectedClub]);
 
-  const lockedSlot = locked ? slots.find(s => s.id === locked.slotId) : null;
-  const selectedEntry = lockedSlot
-    ? (lockedSlot.ranked.find(e => e.player.id === locked.playerId) || lockedSlot.main)
-    : null;
+  useEffect(() => {
+    if (selectedClub) saveLastDepthView(selectedClub, selectedSnapshotId);
+  }, [selectedClub, selectedSnapshotId]);
 
-  function handleSelectSlot(slot, entry) {
-    setLocked({ slotId: slot.id, playerId: entry ? entry.player.id : null });
+  // Affectations manuelles (postes -> jusqu'à 8 joueurs) : propres au club, à l'import précis
+  // et à la formation consultés, rechargées dès que l'un des trois change.
+  const [assignments, setAssignments] = useState(() => loadFormationAssignments(selectedClub, selectedSnapshotId, formationKey));
+  useEffect(() => {
+    setAssignments(loadFormationAssignments(selectedClub, selectedSnapshotId, formationKey));
+    setLocked(null);
+  }, [selectedClub, selectedSnapshotId, formationKey]);
+
+  const slots = useMemo(() => formation.slots.map((slot, index) => {
+    const id = `${slot.code}-${index}`;
+    const players = (assignments[id] || [])
+      .map(pid => scopedPlayersById.get(pid))
+      .filter(Boolean)
+      .map(player => ({ player }));
+    return {
+      id,
+      code: slot.code,
+      x: slot.x,
+      y: slot.y,
+      main: players[0] || null,
+      bench: players.slice(1, 3),
+      ranked: players,
+      status: depthStatusFromCount(players.length)
+    };
+  }), [formation, assignments, scopedPlayersById]);
+
+  const lockedSlot = locked ? slots.find(s => s.id === locked) : null;
+  const editingSlot = editingSlotId ? slots.find(s => s.id === editingSlotId) : null;
+
+  // Le poste de gardien (GB, en bas du terrain) ne peut accueillir que des gardiens ; tous
+  // les autres postes excluent les gardiens — la modale de choix ne propose donc que les
+  // joueurs éligibles à CE poste précis.
+  const eligiblePlayersForSlot = useMemo(() => {
+    if (!editingSlot) return [];
+    const wantsGoalkeeper = editingSlot.code === 'GB';
+    return scopedPlayers.filter(p => isGoalkeeper(p.poste) === wantsGoalkeeper);
+  }, [editingSlot, scopedPlayers]);
+
+  // Un poste déjà occupé se contente d'afficher ses infos dans le panneau ; la modale de
+  // choix ne s'ouvre automatiquement que pour un poste encore vide (sinon, le bouton
+  // "Modifier" du panneau permet de la rouvrir).
+  function handleSelectSlot(slot) {
+    setLocked(slot.id);
+    if (slot.ranked.length === 0) {
+      setEditingSlotId(slot.id);
+    }
   }
 
-  function handleSelectEntry(entry) {
-    if (!lockedSlot) return;
-    setLocked({ slotId: lockedSlot.id, playerId: entry.player.id });
+  function handleSaveSlotPlayers(playerIds) {
+    if (!editingSlotId) return;
+    saveSlotAssignment(selectedClub, selectedSnapshotId, formationKey, editingSlotId, playerIds);
+    setAssignments(prev => ({ ...prev, [editingSlotId]: playerIds }));
+    setEditingSlotId(null);
   }
 
-  function handleFormationChange(key) {
+  // Les modales Formation/Club gardent leur propre choix en brouillon (résumé live inclus) et
+  // n'appellent ceci qu'au clic sur "Appliquer" — rien n'est donc écrit en mémoire tant que
+  // l'utilisateur n'a pas confirmé, contrairement à avant où chaque aperçu était déjà persisté.
+  function applyFormationModal(key) {
     setFormationKey(key);
+    saveClubFormation(selectedClub, key);
     setLocked(null);
   }
 
-  function handleClubChange(club) {
+  function applyClubModal(club, snapshotId) {
     setSelectedClub(club);
-    const mostRecent = importsByClub.get(club)?.[0]?.id || null;
-    setSelectedSnapshotId(mostRecent);
-    setLocked(null);
-  }
-
-  function handleSnapshotChange(snapshotId) {
     setSelectedSnapshotId(snapshotId);
     setLocked(null);
   }
 
-  function handleMethodChange(newMethod) {
-    setMethod(newMethod);
-    setLocked(null);
-  }
-
   function openFormationModal() {
-    setFormationSnapshot(formationKey);
     setFormationModalOpen(true);
   }
-  function cancelFormationModal() {
-    if (formationSnapshot) handleFormationChange(formationSnapshot);
-    setFormationModalOpen(false);
-  }
-  function applyFormationModal() {
+  function closeFormationModal() {
     setFormationModalOpen(false);
   }
 
   function openClubModal() {
-    setClubSnapshot({ selectedClub, selectedSnapshotId });
     setClubModalOpen(true);
   }
-  function cancelClubModal() {
-    if (clubSnapshot) {
-      setSelectedClub(clubSnapshot.selectedClub);
-      setSelectedSnapshotId(clubSnapshot.selectedSnapshotId);
-      setLocked(null);
-    }
+  function closeClubModal() {
     setClubModalOpen(false);
-  }
-  function applyClubModal() {
-    setClubModalOpen(false);
-  }
-
-  function openMethodModal() {
-    setMethodSnapshot(method);
-    setMethodModalOpen(true);
-  }
-  function cancelMethodModal() {
-    if (methodSnapshot) handleMethodChange(methodSnapshot);
-    setMethodModalOpen(false);
-  }
-  function applyMethodModal() {
-    setMethodModalOpen(false);
   }
 
   if (snapshots.length === 0) {
@@ -284,39 +318,48 @@ export default function DepthPage() {
 
   return (
     <div className="depth-page">
-      <p className="depth-intro">
-        Chaque poste affiche son titulaire et sa doublure, notés selon leurs attributs. Survole une carte pour son détail, clique un poste pour verrouiller le panneau.
-      </p>
 
       <div className="depth-controls">
-        <button type="button" className="depth-config-btn" onClick={openFormationModal}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
-            <path d="M3.5 10.5h17M9 4.5v15" />
-          </svg>
-          Formation
-        </button>
-        <button type="button" className="depth-config-btn" onClick={openClubModal}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M4 21V6.5a2 2 0 0 1 1.2-1.83l6-2.57a2 2 0 0 1 1.6 0l6 2.57A2 2 0 0 1 20 6.5V21" />
-            <path d="M9 21v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5M9 10h.01M15 10h.01M12 10h.01" />
-          </svg>
-          Club
-        </button>
-        <button type="button" className="depth-config-btn" onClick={openMethodModal}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.9L12 3Z" />
-            <path d="M19 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z" />
-          </svg>
-          Méthode
-        </button>
+        <div className="depth-club-info">
+          {selectedClub && clubLogos[selectedClub] ? (
+            <img src={clubLogos[selectedClub]} alt="" className="depth-club-info-logo" />
+          ) : (
+            <span className="depth-club-info-logo depth-club-info-logo-fallback">{clubInitials(selectedClub)}</span>
+          )}
+          <div className="depth-club-info-text">
+            <div className="depth-club-info-name">{selectedClub || 'Aucun club'}</div>
+            {selectedSnapshot && (
+              <div className="depth-club-info-meta">
+                {formatDate(selectedSnapshot.gameDate)} · {scopedPlayers.length} joueur{scopedPlayers.length > 1 ? 's' : ''}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="depth-controls-actions">
+          <button type="button" className="depth-config-btn" onClick={openFormationModal}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+              <path d="M3.5 10.5h17M9 4.5v15" />
+            </svg>
+            <span className="depth-config-btn-label">{hasChosenFormation ? formation.label : 'Formation'}</span>
+          </button>
+
+          <button type="button" className="depth-config-btn" onClick={openClubModal}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M4 21V6.5a2 2 0 0 1 1.2-1.83l6-2.57a2 2 0 0 1 1.6 0l6 2.57A2 2 0 0 1 20 6.5V21" />
+              <path d="M9 21v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5M9 10h.01M15 10h.01M12 10h.01" />
+            </svg>
+            <span className="depth-config-btn-label">{selectedClub || 'Club'}</span>
+          </button>
+        </div>
       </div>
 
       <div className="depth-layout">
         <DepthPitch
           formation={formation}
           slots={slots}
-          lockedSlotId={locked?.slotId || null}
+          lockedSlotId={locked}
           onSelectSlot={handleSelectSlot}
           onClear={() => setLocked(null)}
         />
@@ -324,22 +367,16 @@ export default function DepthPage() {
         <div className="depth-panel">
           {!lockedSlot ? (
             <div className="depth-panel-placeholder">
-              Clique un poste sur le terrain pour voir le détail du joueur et sa profondeur.
+              Clique un poste sur le terrain pour choisir ses joueurs et voir le détail.
             </div>
           ) : (
-            <DepthDetailPanel
-              slot={lockedSlot}
-              entry={selectedEntry}
-              profileByKey={profileByKey}
-              method={method}
-              onSelectEntry={handleSelectEntry}
-            />
+            <DepthDetailPanel key={lockedSlot.id} slot={lockedSlot} onEdit={() => setEditingSlotId(lockedSlot.id)} />
           )}
         </div>
       </div>
 
       <div className="depth-legend">
-        <span className="depth-legend-label">Statut du poste :</span>
+        <span className="depth-legend-label">Statut de la profondeur d'effectif :</span>
         {STATUS_LEGEND.map(item => (
           <div className="depth-legend-item" key={item.tier}>
             <span className={`depth-legend-dot depth-legend-dot-${item.tier}`} />
@@ -351,10 +388,9 @@ export default function DepthPage() {
       {formationModalOpen && (
         <DepthFormationModal
           formationKey={formationKey}
-          onSelectFormation={handleFormationChange}
-          summary={summary}
-          onCancel={cancelFormationModal}
+          club={selectedClub}
           onApply={applyFormationModal}
+          onClose={closeFormationModal}
         />
       )}
 
@@ -363,22 +399,20 @@ export default function DepthPage() {
           clubs={clubs}
           importsByClub={importsByClub}
           selectedClub={selectedClub}
-          onSelectClub={handleClubChange}
           selectedSnapshotId={selectedSnapshotId}
-          onSelectSnapshot={handleSnapshotChange}
-          summary={summary}
-          onCancel={cancelClubModal}
+          formationLabel={formation.label}
           onApply={applyClubModal}
+          onClose={closeClubModal}
         />
       )}
 
-      {methodModalOpen && (
-        <DepthMethodModal
-          method={method}
-          onSelectMethod={handleMethodChange}
-          summary={summary}
-          onCancel={cancelMethodModal}
-          onApply={applyMethodModal}
+      {editingSlot && (
+        <DepthSlotModal
+          slotLabel={EXACT_POSITION_LABELS[editingSlot.code]}
+          players={eligiblePlayersForSlot}
+          selectedIds={editingSlot.ranked.map(e => e.player.id)}
+          onClose={() => setEditingSlotId(null)}
+          onSave={handleSaveSlotPlayers}
         />
       )}
     </div>

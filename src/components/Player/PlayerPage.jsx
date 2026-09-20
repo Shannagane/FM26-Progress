@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import PlayerAvatar from '../Squad/PlayerAvatar.jsx';
@@ -12,6 +12,7 @@ import HistoryTab from './HistoryTab.jsx';
 import StatsTab from './StatsTab.jsx';
 import { isGoalkeeper } from '../../data/positionOrder.js';
 import { formatTransferValue } from '../../utils/transferValue.js';
+import { normalize } from '../../utils/text.js';
 import './PlayerPage.css';
 
 export default function PlayerPage() {
@@ -25,9 +26,11 @@ export default function PlayerPage() {
     return <Navigate to="/effectif" replace />;
   }
 
+  const backTo = player.importClub ? `/effectif/${encodeURIComponent(player.importClub)}` : '/effectif';
+
   return (
     <div className="player-page">
-      <Link to="/effectif" className="back-link">← Retour à l'effectif</Link>
+      <Link to={backTo} className="player-back-button">← Retour à l'effectif</Link>
 
       <div className="player-header">
         <PlayerAvatar nom={player.nom} photo={player.photo} numero={player.numero} poste={player.poste} size={64} />
@@ -35,7 +38,7 @@ export default function PlayerPage() {
           <div className="player-header-title-row">
             <h2 className="player-header-name">{player.nom}</h2>
             <NationFlag nation={player.nation} />
-            <NationFlag nation={player.nation2} />
+            {normalize(player.nation2) !== normalize(player.nation) && <NationFlag nation={player.nation2} />}
           </div>
           <div className="player-header-badges">
             <span className={`position-badge ${isGoalkeeper(player.poste) ? 'position-gk' : ''}`}>

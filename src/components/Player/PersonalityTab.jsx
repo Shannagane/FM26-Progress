@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getPlayerSnapshots } from '../../utils/storage.js';
 import './PersonalityTab.css';
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
+import { createContext, useContext, useMemo, useState, useCallback } from 'react';
 import {
   loadSnapshots, addSnapshot, removeSnapshot, clearSnapshots as clearStoredSnapshots, getCurrentPlayers
 } from '../utils/storage';

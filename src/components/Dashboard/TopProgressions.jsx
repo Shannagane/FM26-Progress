@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppData } from '../../context/AppContext.jsx';
 import { getAttributeDeltas } from '../../utils/attributeProgress.js';
@@ -82,6 +82,7 @@ export default function TopProgressions() {
           ))}
         </div>
       </div>
+      
     </div>
   );
 }
